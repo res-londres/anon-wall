@@ -7,12 +7,14 @@
     <title>AnonWall</title>
 </head>
 <body>
+    <!-- Loading Screen -->
     <div id="loading-container" style="display:none;">
         <div class="loading-card">
             <div class="loading-spinner"></div>
         </div>
     </div>
-    <div id="login-container" >
+    <!-- Login Screen -->
+    <div id="login-container" style="display:none;">
         <div class="login-card">
             <div class="card-left">
                 <h1>AnonWall</h1>
@@ -27,6 +29,31 @@
             </div>
         </div>
     </div>
+    <!-- Main Screen -->
+     <main id="main-container">
+        <section class="left-sidebar">
+            <h1>AnonWall</h1>
+            <nav>
+                <a href="#" data-page="profile">Profile</a>
+                <a href="#" data-page="main-wall" class="active">Main Wall</a>
+                <a href="#" data-page="canvas">Canvas</a>
+            </nav>
+        </section>
+        <section class="content">
+            <div id="page-profile" class="page-content" style="display:none;">
+                profile page
+            </div>
+            <div id="page-main-wall" class="page-content">
+                main wall page
+            </div>
+            <div id="page-canvas" class="page-content" style="display:none;">
+                canvas page
+            </div>
+        </section>
+        <section class="right-sidebar">
+            hello
+        </section>
+     </main>
     
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="static/script.js"></script>

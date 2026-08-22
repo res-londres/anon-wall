@@ -117,6 +117,39 @@
         grid-template-rows: 35% 1fr;
     }
 }
+
+/* ----------! MAIN !---------- */
+#main-container {
+    background: #bdd5eaff;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 20% 1fr 20%;
+    min-height: 100vh;
+}
+/* ----- left-sidebar -----*/
+.left-sidebar {
+    background: #f7f7ffff;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1.25rem;
+}
+.left-sidebar h1 {
+    color: #495867ff;
+}
+/* --- nav --- */
+
+/* ----- content ------ */
+.content {
+    background: #f7f7ffff;
+    padding: 1.25rem;
+}
+/* ----- right-sidebar ----- */
+.right-sidebar {
+    background: #f7f7ffff;
+    padding: 1.25rem;
+}
+
 /*
 --blue-slate: #495867ff;
 --glaucous: #577399ff;
