@@ -131,14 +131,34 @@
     background: #f7f7ffff;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 1.25rem;
 }
 .left-sidebar h1 {
     color: #495867ff;
+    margin: 1.5rem;
 }
 /* --- nav --- */
-
+.left-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+.left-sidebar nav a {
+    color: #495867ff;
+    font-size: 1.25rem;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+.left-sidebar nav a:hover {
+    background: #bdd5eaff;
+    color: #495867ff;
+    padding-left: 2.5rem;
+}
+.left-sidebar nav a.active {
+    background: #577399ff;
+    color: #f7f7ffff;
+    font-weight: bold;
+}
 /* ----- content ------ */
 .content {
     background: #f7f7ffff;
