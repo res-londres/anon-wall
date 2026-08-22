@@ -1,0 +1,93 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ---------- ! LOGIN !---------- */
+#login-container {
+    align-items: center;
+    background: #bdd5eaff;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+.login-card {
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    overflow: hidden;
+}
+/* ----- left-side ----- */
+.card-left {
+    background: #f7f7ffff;
+    color: #577399ff;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 2rem;
+    width: 100%;
+}
+.card-left h1 {
+    font-size: 3rem;
+    font-size: clamp(2.5rem, 5vw, 3rem); 
+    word-break: break-word;
+}
+/* ----- right-side ----- */
+.card-right {
+    background: #577399ff;
+    color: #f7f7ffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    padding: 2rem;
+    width: 100%;
+}
+.card-right button {
+    background: #495867ff;
+    border: none;
+    border-radius: 0.5rem;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem 2rem;
+    transition: background 0.3s, transform 0.3s;
+}
+.card-right button:hover {
+    background: #bdd5eaff;
+    color: #495867ff;
+    transform: scale(1.05);
+}
+.card-right h2 {
+    padding: 0 0 2rem;
+}
+.card-right input {
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+}
+.card-right input:focus {
+  outline: 2px solid #495867ff;
+}   
+.card-right p {
+    margin-bottom: 0.2rem;
+}
+#invalid-username-message {
+    margin-bottom: 1rem;
+    min-height: 1.2rem;
+}
+/* ----- mobile ----- */
+@media (max-width: 768px) {
+    .login-card {
+        grid-template-columns: auto;
+        grid-template-rows: 35% 1fr;
+    }
+}
+/*
+--blue-slate: #495867ff;
+--glaucous: #577399ff;
+--pale-sky: #bdd5eaff;
+--ghost-white: #f7f7ffff;
+*/
