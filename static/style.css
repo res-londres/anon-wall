@@ -3,8 +3,39 @@
     margin: 0;
     padding: 0;
 }
+/* ----------! LOADING !---------- */
+#loading-container {
+    align-items: center;
+    background: #bdd5eaff;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+}
+.loading-card {
+    background: #f7f7ffff;
+    border: 2px solid #495867ff;
+    border-radius: 1rem;
+    padding: 3rem;
+}
+.loading-spinner {
+    animation: spin 1s ease infinite; 
+    border-radius: 50%;
+    border: 4px solid #bdd5eaff;
+    border-top: 4px solid #495867ff;
+    height: 40px;
+    width: 40px;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}   
 
-/* ---------- ! LOGIN !---------- */
+/* ----------! LOGIN !---------- */
 #login-container {
     align-items: center;
     background: #bdd5eaff;
@@ -14,6 +45,7 @@
     padding: 2rem;
 }
 .login-card {
+    border: 2px solid #495867ff;
     border-radius: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr; 
@@ -63,7 +95,7 @@
     padding: 0 0 2rem;
 }
 .card-right input {
-    border: none;
+    border: 2px solid #495867ff;
     border-radius: 0.5rem;
     padding: 0.5rem 1rem;
     width: 100%;
