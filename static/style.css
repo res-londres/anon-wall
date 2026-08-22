@@ -131,7 +131,6 @@
 .header {
     align-items: center;
     background: #577399ff;
-    border: 2px solid #495867ff;
     display: flex;
     grid-column: span 3;
 }
@@ -141,10 +140,10 @@
 }
 /* ----- left-sidebar -----*/
 .left-sidebar {
-    background: #f7f7ffff;
     display: flex;
     flex-direction: column;
     grid-row: 2;
+    padding-left: 2px;
 }
 /* --- nav --- */
 .left-sidebar nav {
@@ -161,12 +160,14 @@
     transition: all 0.3s;
 }
 .left-sidebar nav a:hover {
-    background: #bdd5eaff;
+    background: #f7f7ffff;
+    border-radius: 0.5rem;
     color: #495867ff;
     padding-left: 2.5rem;
 }
 .left-sidebar nav a.active {
     background: #577399ff;
+    border-radius: 0.5rem;
     color: #f7f7ffff;
     font-weight: bold;
 }
@@ -178,9 +179,8 @@
 }
 /* ----- right-sidebar ----- */
 .right-sidebar {
-    background: #f7f7ffff;
     grid-row: 2;
-    padding: 1.25rem;
+    padding: 1rem;
 }
 
 /*
