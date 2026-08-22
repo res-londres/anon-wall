@@ -3,10 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css" type="text/css">
     <title>Wallhalla</title>
 </head>
 <body>
-    this is a page
+    <div id="login-container">
+        <div class="login-card">
+            <div class="card-left">
+                <h1>Wallhalla</h1>
+            </div>
+            <div class="card-right">
+                <h2>Sign up to Wallhalla</h2>
+                <p>Enter your private username</p>
+                <input type="text" id="username-input" placeholder="Enter your private username..." maxLength="20">
+                <p id="invalid-username-message"></p>
+                <button id="signup-button">Sign up</button>
+            </div>
+        </div>
+    </div>
     
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="static/script.js"></script>
