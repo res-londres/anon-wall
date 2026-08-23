@@ -35,8 +35,8 @@
   }
 }   
 
-/* ----------! LOGIN !---------- */
-#login-container {
+/* ----------! SIGN-UP !---------- */
+#sign-up-container {
     align-items: center;
     background: #caf4dd;
     display: flex;
@@ -44,7 +44,7 @@
     min-height: 100dvh;
     padding: 2rem;
 }
-.login-card {
+.sign-up-card {
     border: 2px solid #1e392a;
     border-radius: 1rem;
     display: grid;
@@ -110,7 +110,7 @@
 }
 /* ----- mobile ----- */
 @media (max-width: 768px) {
-    .login-card {
+    .sign-up-card {
         grid-template-columns: auto;
         grid-template-rows: 35% 1fr;
     }
