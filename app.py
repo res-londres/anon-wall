@@ -23,6 +23,13 @@ def check_session():
     print(f'[HTTP] no active session')
     return jsonify({'active': False})
 
+# ---------- sign-up ----------- #
+@socketio.on('sign-up')
+def handle_sign_up(data):
+    print(f'[SIGN-UP] new user signing up..')
+    print(f'[SIGN-UP] sign up success: {data['username']}')
+    emit('sign-up-success', {'username': data['username'],'set_cookie': True})
+
 # ---------- etc ---------- #
 @socketio.on('connect')
 def handle_connect():

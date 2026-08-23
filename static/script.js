@@ -15,19 +15,17 @@ function checkSession() {
             if (data.active) {
                 // auto login success
                 console.log('[CHECK-SESSION] active session found; loggin in..')
-                document.getElementById('loading-container').style.display = 'none';
-                document.getElementById('main-container').style.display = 'grid';
+                showScreen('main')
             } else {
                 console.log('[CHECK-SESSION] active session not found; continuing to sign up..')
-                document.getElementById('loading-container').style.display = 'none';
-                document.getElementById('login-container').style.display = 'flex';
+                showScreen('login')
             }
         })
 }
 
 // ---------- cookie-helpers ---------- //
 function setCookie(name, value, days) {
-    const expires = '';
+    let expires = '';
     if (days) {
         const date = new Date();
         date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -40,6 +38,51 @@ function setCookie(name, value, days) {
 function deleteCookie(name) {
     document.cookie = name + '=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     console.log('[DELETE-COOKIE] cookie deleted:', name);
+}
+
+// ---------- sign-up ---------- //
+function signUp() {
+    const usernameInput = document.getElementById('username-input');
+    const username = usernameInput.value.trim();
+    if (!username || !isAlphanumeric(username)) {
+        const invalidUsernameMessage = document.getElementById('invalid-username-message').textContent = 'Please enter a valid alphanumeric name!';
+        usernameInput.focus();
+        return;
+    }
+    const signUpButton = document.getElementById('sign-up-button');
+    signUpButton.disabled = true;
+    signUpButton.textContent = 'Signing up..';
+    socket.emit('sign-up', {username: username});
+}
+socket.on('sign-up-success', function(data) {
+    if (data.set_cookie) {
+        setCookie('user_id', data.username, 365);
+    }
+    showScreen('main');
+    resetSignUpState();
+})
+
+// ---------- misc-helpers ---------- //
+function isAlphanumeric(str) {
+    return /^[a-zA-Z0-9]+$/.test(str);
+}
+function resetSignUpState() {
+    document.getElementById('username-input').value = '';
+    const signUpButton = document.getElementById('sign-up-button');
+    signUpButton.disabled = false;
+    signUpButton.textContent = 'Sign up';
+}
+function showScreen(screenName) {
+    const screens = ['loading', 'login', 'main'];
+    screens.forEach(name => {
+        document.getElementById(`${name}-container`).style.display = 'none';
+    });
+    const displayMap = {
+        loading: 'flex',
+        login: 'flex',
+        main: 'grid'
+    };
+    document.getElementById(`${screenName}-container`).style.display = displayMap[screenName];
 }
 
 
