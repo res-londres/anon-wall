@@ -14,11 +14,11 @@ function checkSession() {
         .then(data => {
             if (data.active) {
                 // auto sign up success
-                console.log('[CHECK-SESSION] active session found; loggin in..')
-                showScreen('main')
+                console.log('[CHECK-SESSION] active session found; loggin in..');
+                showScreen('main');
             } else {
-                console.log('[CHECK-SESSION] active session not found; continuing to sign up..')
-                showScreen('signUp')
+                console.log('[CHECK-SESSION] active session not found; continuing to sign up..');
+                showScreen('sign-up');
             }
         })
 }
@@ -73,13 +73,13 @@ function resetSignUpState() {
     signUpButton.textContent = 'Sign up';
 }
 function showScreen(screenName) {
-    const screens = ['loading', 'signUp', 'main'];
+    const screens = ['loading', 'sign-up', 'main'];
     screens.forEach(name => {
         document.getElementById(`${name}-container`).style.display = 'none';
     });
     const displayMap = {
         loading: 'flex',
-        signUp: 'flex',
+        'sign-up': 'flex',
         main: 'grid'
     };
     document.getElementById(`${screenName}-container`).style.display = displayMap[screenName];
