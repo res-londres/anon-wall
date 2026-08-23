@@ -1,4 +1,4 @@
-from Flask import request
+from flask import request
 
 # ---------- cookie helpers ---------- #
 class Cookies:
