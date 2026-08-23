@@ -27,8 +27,15 @@ def check_session():
 @socketio.on('sign-up')
 def handle_sign_up(data):
     print(f'[SIGN-UP] new user signing up..')
-    print(f'[SIGN-UP] sign up success: {data['username']}')
-    emit('sign-up-success', {'username': data['username'],'set_cookie': True})
+    username = data['username']
+    existing_ids = [] # TODO: change this when we work on database
+    try:
+        user_id = help.ID.generate_user_id(username, existing_ids)
+    except ValueError:
+        emit('join_error', {'reason': 'bad_name'})
+        return
+    print(f'[SIGN-UP] sign up success: {user_id}')
+    emit('sign-up-success', {'user_id': user_id, 'username': username,'set_cookie': True})
 
 # ---------- etc ---------- #
 @socketio.on('connect')

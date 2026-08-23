@@ -56,7 +56,7 @@ function signUp() {
 }
 socket.on('sign-up-success', function(data) {
     if (data.set_cookie) {
-        setCookie('user_id', data.username, 365);
+        setCookie('user_id', data.user_id, 365);
     }
     showScreen('main');
     resetSignUpState();
