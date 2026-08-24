@@ -23,7 +23,7 @@
             <div class="card-right">
                 <h2>Sign up to AnonWall</h2>
                 <p>Enter your private username</p>
-                <input type="text" id="username-input" placeholder="Username" maxLength="20">
+                <input type="text" id="username-input" placeholder="Username" maxLength="20" onkeydown="if (event.key === 'Enter') signUp();">
                 <p id="invalid-username-message"></p>
                 <button id="sign-up-button" onclick="signUp()">Sign up</button>
             </div>

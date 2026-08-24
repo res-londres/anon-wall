@@ -49,7 +49,9 @@
     border-radius: 1rem;
     display: grid;
     grid-template-columns: 1fr 1fr; 
+    max-width: 700px;
     overflow: hidden;
+    width: 100%
 }
 /* ----- left-side ----- */
 .card-left {
@@ -99,7 +101,7 @@
     width: 100%;
 }
 .card-right input:focus {
-  outline: 2px solid #1e392a;
+  outline: none;
 }   
 .card-right p {
     margin-bottom: 0.2rem;
@@ -119,7 +121,6 @@
 /* ----------! MAIN !---------- */
 #main-container {
     background: #caf4dd;
-    column-gap: 1rem;
     display: grid;
     grid-template-columns: 20% 1fr 20%;
     grid-template-rows: 3rem 1fr;
@@ -147,7 +148,6 @@
     flex-direction: column;
     grid-row: 2;
     height: calc(100dvh - 3rem);
-    padding-left: 2px;
     position: sticky;
     top: 3rem;
     overflow-y: auto; 
@@ -168,14 +168,11 @@
 }
 .left-sidebar nav a:hover {
     background: #ffffff;
-    border-radius: 0.5rem;
     color: #1e392a;
     padding-left: 2.5rem;
 }
 .left-sidebar nav a.active {
     background: #3cc47c;
-    border: 2px solid #1e392a;
-    border-radius: 0.5rem;
     color: #ffffff;
     font-weight: bold;
 }

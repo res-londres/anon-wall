@@ -42,7 +42,6 @@ def handle_sign_up(data):
 def handle_connect():
     print('[CONNECT] someone connects..')
 
-
 @socketio.on('disconnect')
 def handle_disconnect():
     print('[DISCONNECT] someone disconnects..')
