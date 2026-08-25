@@ -161,7 +161,7 @@
 }
 .left-sidebar nav a {
     color: #1e392a;
-    font-size: 1.25rem;
+    font-size: 1rem;
     padding: 1rem 2rem;
     text-decoration: none;
     transition: all 0.3s;
@@ -172,7 +172,7 @@
     padding-left: 2.5rem;
 }
 .left-sidebar nav a.active {
-    background: #3cc47c;
+    background: linear-gradient(90deg, #3cc47c, #caf4dd);
     color: #ffffff;
     font-weight: bold;
 }
@@ -196,7 +196,6 @@
 }
 /* ----- content ------ */
 .content {
-    background: #ffffff;
     grid-row: 2;
     height: calc(100dvh - 3rem);
     padding: 1.25rem;
@@ -227,6 +226,99 @@
     padding: 1rem;
     top: 3dvh;
 }
+
+/* -------------------- !!! CONTENTS !!! -------------------- */
+/* --------------- !! MAIN WALL !! --------------- */
+/* ---------- ! POST CREATOR ! ---------- */
+.post-creator {
+    background: #ffffff;
+    border: 2px solid #1e392a;
+    border-radius: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    z-index: 10;
+}
+.post-creator-header {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+.post-creator-label {
+    color: #1e392a;
+    font-weight: bold;
+}
+.post-creator-controls {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.alt-name-select {
+    background: #caf4dd;
+    border: 1px solid #1e392a;
+    border-radius: 0.5rem;
+    color: #1e392a;
+    cursor: pointer;
+    padding: 0.25rem 1.25rem;
+    outline: none;
+}
+.alt-name-select:focus {
+    border-color: #3cc47c;
+}
+.post-button {
+    background: #3cc47c;
+    border: none;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.25rem 1.25rem;
+    transition: background 0.2s, transform 0.2s;
+}
+.post-button:hover {
+    background: #2ca86a;
+    transform: scale(1.05);
+}
+.post-button:active {
+    transform: scale(0.95);
+}
+.post-creator-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.post-subject {
+    background: #fafffd;
+    border: 1px solid #1e392a;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    padding: 0.25rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+.post-subject:focus {
+    outline: none;
+    border-color: #3cc47c;
+}
+.post-content {
+    background: #fafffd;
+    border: 1px solid #1e392a;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    padding: 0.25rem;
+    resize: vertical;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+.post-content:focus {
+    outline: none;
+    border-color: #3cc47c;
+}
+
 
 /*
 dark: #1e392a
