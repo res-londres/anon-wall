@@ -8,7 +8,7 @@
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loading-container">
+    <div id="loading-container" style="display: none;">
         <div class="loading-card">
             <div class="loading-spinner"></div>
         </div>
@@ -30,7 +30,7 @@
         </div>
     </div>
     <!-- Main Screen -->
-     <main id="main-container" style="display: none;">
+     <main id="main-container" >
         <section class="header">
             <h1>AnonWall</h1>
         </section>
@@ -46,8 +46,25 @@
                 profile page
             </div>
             <div id="page-main-wall" class="page-content">
-                main wall page
-                <button onclick="deleteCookie('user_id')">Magic button</button> <!-- testing -->
+                <!-- Post Creator -->
+                <div class="post-creator">
+                    <div class="post-creator-header">
+                        <p class="post-creator-label">Create post</p>
+                        <div class="post-creator-controls">
+                            <select id="alt-name-select" class="alt-name-select">
+                                <option value="{new-alt}">+ Create New Alt</option>
+                            </select>
+                            <button class="post-button">Post</button>
+                        </div>
+                    </div>
+                    <input type="text" id="post-title" placeholder="Subject" maxlength="300">
+                    <textarea id="post-content" class="post-content" placeholder="Write something.." rows="2"></textarea>
+                </div>
+
+                <!-- Wall -->
+                <div id="wall">
+                    <!-- posts will be provided by js -->
+                </div>
             </div>
             <div id="page-canvas" class="page-content" style="display:none;">
                 canvas page
