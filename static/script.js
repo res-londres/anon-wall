@@ -121,8 +121,8 @@ function showScreen(screenName) {
 let posts = [];
 
 function createPost() {
-    const postSubject = document.getElementById('post-subject');
-    const postContent = document.getElementById('post-content');
+    const postSubject = document.getElementById('post-subject-input');
+    const postContent = document.getElementById('post-content-input');
     const subject = postSubject.value.trim();
     const content = postContent.value.trim();
 
@@ -172,12 +172,13 @@ function createPostHTML(post) {
                 <span class="post-time">${post.time || 'Just now'}</span>
             </div>
             <div class="post-subject">${escapeHTML(post.subject) || '[NO SUBJECT]'}</div>
+            <div class="post-content-preview">${post.content.length > 1000 ? escapeHTML(post.content.slice(997) + '...') : escapeHTML(post.content)}</div>
             <div class="post-footer">
-                <button class="like-button ${post.liked ? 'liked' : ''}">
+                <button class="post-action-button ${post.liked ? 'liked' : ''}">
                     <span class="like-icon">${post.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}</span>
                     <span class="like-count">${post.likes}</span>
                 </button>
-                <button class="comment-button">
+                <button class="post-action-button">
                     <span class="comment-icon">${'<i class="fa-regular fa-comment"></i>'}</span>
                     <span>${post.comments ? post.comments.length : 0}</span>
                 </button>
