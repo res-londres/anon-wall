@@ -155,9 +155,10 @@ function renderPosts() {
         `;
         return;
     }
+    postsReversed = posts.reverse();
     
     let html = '';
-    posts.forEach(post => {
+    postsReversed.forEach(post => {
         html += createPostHTML(post);
     });
     
