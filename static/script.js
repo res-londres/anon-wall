@@ -180,7 +180,7 @@ function createPostHTML(post, index) {
             <div class="post-subject">${escapeHTML(post.subject)}</div>
             <div class="post-content-preview">${escapeHTML(postContentPreview)}</div>
             <div class="post-footer" onclick="event.stopPropagation();">
-                <button class="post-action-button">
+                <button class="post-action-button" ${post.liked ? 'liked' : ''}" onclick="toggleLike(${index})">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${post.likes}</span>
                 </button>
@@ -219,11 +219,19 @@ function createModalHTML(post, index) {
 
     let commentsHTML = '';
     if (post.comments && post.comments.length > 0) {
-        post.comments.forEach(comment => {
+        post.comments.forEach((comment, commentIndex) => {
+            const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
             commentsHTML += `
                 <div class="modal-comment-item">
-                    <span class="modal-comment-attribution">${escapeHTML(comment.attribution)}</span>
-                    <span class="modal-comment-text">${escapeHTML(comment.content)}</span>
+                    <div class="modal-comment-left">
+                        <span class="modal-comment-attribution">${escapeHTML(comment.attribution)}</span>
+                        <span class="modal-comment-text">${escapeHTML(comment.content)}</span>
+                    </div>
+                    <button class="modal-comment-like-button ${comment.liked ? 'liked' : ''}" 
+                            onclick="toggleCommentLike(${index}, ${commentIndex})">
+                        <i class="${commentLikeIcon}"></i>
+                        <span class="modal-comment-like-count">${comment.likes}</span>
+                    </button>
                 </div>
             `;
         });
@@ -242,7 +250,7 @@ function createModalHTML(post, index) {
             <div class="modal-post-subject">${escapeHTML(post.subject)}</div>
             <div class="modal-post-content">${escapeHTML(post.content)}</div>
             <div class="modal-post-footer">
-                <button class="post-action-button">
+                <button class="post-action-button" ${post.liked ? 'liked' : ''}" onclick="toggleLikeModal(${index})">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${post.likes}</span>
                 </button>
@@ -269,6 +277,20 @@ function createModalHTML(post, index) {
 }
 
 // ---------- modal-actions ---------- //
+function toggleLikeModal(index) {
+    const post = posts[index];
+    if (post) {
+        post.liked = !post.liked;
+        post.likes += post.liked ? 1 : -1;
+        
+        // Re-render the modal
+        const modalContent = document.getElementById('post-detail-content');
+        modalContent.innerHTML = createModalHTML(post, index);
+        
+        // Re-render the wall too
+        renderPosts();
+    }
+}
 function submitCommentModal(index) {
     const commentInput = document.getElementById('modal-comment-input');
     const comment = commentInput.value.trim();
@@ -278,16 +300,16 @@ function submitCommentModal(index) {
     if (post) {
         post.comments.push({
             attribution: 'anon', // Temporary
-            content: comment
+            content: comment,
+            likes: 0,
+            liked: false
         });
         
         commentInput.value = '';
         
-        // re-render modal
         const modalContent = document.getElementById('post-detail-content');
         modalContent.innerHTML = createModalHTML(post, index);
         
-        // re-render wall
         renderPosts();
         
         // scroll to bottom 
@@ -298,6 +320,27 @@ function submitCommentModal(index) {
     }
 }
 
+function toggleLike(index) {
+    const post = posts[index];
+    if (post) {
+        post.liked = !post.liked;
+        post.likes += post.liked ? 1 : -1;
+        renderPosts();
+    }
+}
+function toggleCommentLike(postIndex, commentIndex) {
+    const post = posts[postIndex];
+    if (!post || !post.comments || !post.comments[commentIndex]) return;
+    
+    const comment = post.comments[commentIndex];
+    comment.liked = !comment.liked;
+    comment.likes += comment.liked ? 1 : -1;
+    
+    const modalContent = document.getElementById('post-detail-content');
+    modalContent.innerHTML = createModalHTML(post, postIndex);
+    
+    renderPosts();
+}
 
 function escapeHTML(str) {
     if (!str) return '';

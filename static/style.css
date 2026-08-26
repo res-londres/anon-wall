@@ -383,6 +383,9 @@
     color: #1e392a;
     transform: scale(1.1);
 }
+.liked {
+    color: #3cc47c;
+}
 
 /* ----------! POST MODAL !---------- */
 .post-modal {
@@ -606,7 +609,62 @@
     scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
 }
+/* ----------! MODAL COMMENT LIKES !---------- */
+.modal-comment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0faf5;
+    gap: 0.5rem;
+}
 
+.modal-comment-left {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    flex: 1;
+    min-width: 0;
+}
+
+.modal-comment-like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #828081;
+    font-size: 0.85rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    line-height: 1.2;
+}
+
+.modal-comment-like-button:hover {
+    background: #f0faf5;
+    transform: scale(1.05);
+}
+
+.modal-comment-like-button:active {
+    transform: scale(0.9);
+}
+
+.modal-comment-like-button.liked {
+    color: #3cc47c;
+}
+
+.modal-comment-like-button .modal-comment-like-count {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #828081;
+}
+
+.modal-comment-like-button.liked .modal-comment-like-count {
+    color: #3cc47c;
+}
 /* ----------! EMPTY WALL !---------- */
 .empty-wall {
     text-align: center;
