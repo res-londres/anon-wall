@@ -275,7 +275,7 @@
     color: #ffffff;
     cursor: pointer;
     font-weight: bold;
-    padding: 0.25rem 1.25rem;
+    padding: 0.35rem 1.25rem;
     transition: background 0.2s, transform 0.2s;
 }
 .post-button:hover {
@@ -383,6 +383,230 @@
     color: #1e392a;
     transform: scale(1.1);
 }
+
+/* ----------! POST MODAL !---------- */
+.post-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.post-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
+}
+
+.post-modal-content {
+    position: relative;
+    background: #ffffff;
+    border-radius: 1rem;
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.25s ease;
+    z-index: 10000;
+}
+
+.post-modal-close {
+    position: sticky;
+    top: 0;
+    float: right;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #1e392a;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    transition: background 0.2s;
+    z-index: 10;
+}
+
+.post-modal-close:hover {
+    background: #e8f5ed;
+}
+
+/* Modal Post Card */
+.modal-post-card {
+    background: #ffffff;
+    border-bottom: 2px solid #e8f5ed;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.modal-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.modal-post-attribution {
+    font-weight: bold;
+    color: #1e392a;
+    font-size: 1.05rem;
+}
+
+.modal-post-time {
+    color: #828081;
+    font-size: 0.8rem;
+}
+
+.modal-post-subject {
+    font-weight: bold;
+    color: #1e392a;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-post-content {
+    color: #1e392a;
+    font-size: 1rem;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.modal-post-footer {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid #e8f5ed;
+    margin-top: 0.75rem;
+}
+
+/* Modal Comments */
+.modal-comments-section {
+    margin-top: 1rem;
+}
+
+.modal-comments-title {
+    font-weight: 600;
+    color: #1e392a;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.modal-comment-item {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f0faf5;
+}
+
+.modal-comment-attribution {
+    font-weight: 600;
+    color: #1e392a;
+    white-space: nowrap;
+    font-size: 0.9rem;
+}
+
+.modal-comment-text {
+    color: #1e392a;
+    font-size: 0.9rem;
+    word-wrap: break-word;
+}
+
+.modal-comment-input-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #e8f5ed;
+}
+
+.modal-comment-input {
+    flex: 1;
+    border: 2px solid #e8f5ed;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: #fafffd;
+    transition: border-color 0.2s;
+}
+
+.modal-comment-input:focus {
+    outline: none;
+    border-color: #3cc47c;
+}
+
+.modal-comment-submit {
+    background: #3cc47c;
+    border: none;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.35rem 1.25rem;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.modal-comment-submit:hover {
+    background: #2ca86a;
+    transform: scale(1.05);
+}
+.modal-comment-submit:active {
+    transform: scale(0.95);
+}
+.empty-modal-comments {
+    color: #828081;
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+}
+
+/* Modal Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Modal Scrollbar */
+.post-modal-content::-webkit-scrollbar {
+    width: 5px;
+}
+.post-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.post-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+.post-modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
+}
+.post-modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
 /* ----------! EMPTY WALL !---------- */
 .empty-wall {
     text-align: center;

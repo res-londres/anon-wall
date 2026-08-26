@@ -76,7 +76,16 @@
         <section class="right-sidebar">
             hello
         </section>
-     </main>
+    </main>
+    <!-- Post Detail Modal -->
+    <div id="post-modal" class="post-modal" style="display:none;">
+        <div class="post-modal-overlay" onclick="closePostModal()"></div>
+        <div class="post-modal-content">
+            <div id="post-detail-content">
+                <!-- post detail here -->
+            </div>
+        </div>
+    </div>
     
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script src="static/script.js"></script>
