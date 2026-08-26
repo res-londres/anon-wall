@@ -171,7 +171,7 @@ function createPostHTML(post) {
                 <span class="post-attribution">${post.attribution}</span>
                 <span class="post-time">${post.time || 'Just now'}</span>
             </div>
-            <div class="post-content">${escapeHTML(post.subject)}</div>
+            <div class="post-subject">${escapeHTML(post.subject)}</div>
             <div class="post-footer">
                 <button class="like-button ${post.liked ? 'liked' : ''}">
                     <span class="like-icon">${post.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}</span>
