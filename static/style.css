@@ -323,15 +323,13 @@
     background: #ffffff;
     border: 2px solid #1e392a;
     border-radius: 0.75rem;
-    margin: 0.5rem;
-    padding: 1rem 1.25rem;
+    margin: 0.5rem 0;
+    padding: 1rem 1.5rem;
     transition: all 0.3s;
 }
 .post-card:hover {
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 1.75rem;
-    padding-right: 1.75rem;
+    margin: 0.5rem;
+    padding: 1rem 1rem;
 }
 .post-header {
     align-items: center;
