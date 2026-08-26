@@ -318,7 +318,13 @@
     outline: none;
     border-color: #3cc47c;
 }
-
+/* ----------! EMPTY WALL !---------- */
+.empty-wall {
+    text-align: center;
+    color: #828081;
+    padding: 2rem 0;
+    font-size: 0.95rem;
+}
 
 /*
 dark: #1e392a

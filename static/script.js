@@ -148,7 +148,7 @@ function renderPosts() {
     
     if (posts.length === 0) {
         wall.innerHTML = `
-            <div class="empty-feed">
+            <div class="empty-wall">
                 <div class="empty-icon">${'<i class="fa-solid fa-leaf"></i>'}</div>
                 <p>No posts yet..</p>
             </div>
@@ -171,7 +171,7 @@ function createPostHTML(post) {
                 <span class="post-attribution">${post.attribution}</span>
                 <span class="post-time">${post.time || 'Just now'}</span>
             </div>
-            <div class="post-subject">${escapeHTML(post.subject)}</div>
+            <div class="post-subject">${escapeHTML(post.subject) || '[NO SUBJECT]'}</div>
             <div class="post-footer">
                 <button class="like-button ${post.liked ? 'liked' : ''}">
                     <span class="like-icon">${post.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}</span>
