@@ -7,6 +7,8 @@ function init() {
 
     // setup event listeners
     setupNavigation();
+
+    renderPosts();
 }
 document.addEventListener('DOMContentLoaded', init);
 
@@ -113,4 +115,80 @@ function showScreen(screenName) {
         main: 'grid'
     };
     document.getElementById(`${screenName}-container`).style.display = displayMap[screenName];
+}
+
+// ----------- posts ---------- //
+let posts = [];
+
+function createPost() {
+    const postSubject = document.getElementById('post-subject');
+    const postContent = document.getElementById('post-content');
+    const subject = postSubject.value.trim();
+    const content = postContent.value.trim();
+
+    const newPost = {
+        attribution: 'anon', // Temporary
+        subject: subject,
+        content: content,
+        likes: 0,
+        liked: false,
+        time: 'Just now', // Temporary
+        comments: []
+    };
+    posts.push(newPost);
+
+    postSubject.value = '';
+    postContent.value = '';
+    renderPosts();
+    document.querySelector('.content').scrollTop = 0;
+}
+
+function renderPosts() {
+    const wall = document.getElementById('wall');
+    
+    if (posts.length === 0) {
+        wall.innerHTML = `
+            <div class="empty-feed">
+                <div class="empty-icon">${'<i class="fa-solid fa-leaf"></i>'}</div>
+                <p>No posts yet..</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    posts.forEach(post => {
+        html += createPostHTML(post);
+    });
+    
+    wall.innerHTML = html;
+}
+
+function createPostHTML(post) {
+    return `
+        <div class="post-card">
+            <div class="post-header">
+                <span class="post-attribution">${post.attribution}</span>
+                <span class="post-time">${post.time || 'Just now'}</span>
+            </div>
+            <div class="post-content">${escapeHTML(post.subject)}</div>
+            <div class="post-footer">
+                <button class="like-button ${post.liked ? 'liked' : ''}">
+                    <span class="like-icon">${post.liked ? '<i class="fa-solid fa-heart"></i>' : '<i class="fa-regular fa-heart"></i>'}</span>
+                    <span class="like-count">${post.likes}</span>
+                </button>
+                <button class="comment-button">
+                    <span class="comment-icon">${'<i class="fa-regular fa-comment"></i>'}</span>
+                    <span>${post.comments ? post.comments.length : 0}</span>
+                </button>
+            </div>
+            <div class="post-comments" style="${post.comments && post.comments.length > 0 ? '' : 'display:none;'}"></div>
+        </div>
+    `;
+}
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
 }
