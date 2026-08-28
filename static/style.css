@@ -167,7 +167,7 @@
     transition: all 0.3s;
 }
 .left-sidebar nav a:hover {
-    background: #ffffff;
+    background: linear-gradient(90deg, #ffffff, #caf4dd);
     color: #1e392a;
     padding-left: 2.5rem;
 }
@@ -270,12 +270,12 @@
 }
 .post-button {
     background: #3cc47c;
-    border: none;
+    border: 1px solid #1e392a;
     border-radius: 0.5rem;
     color: #ffffff;
     cursor: pointer;
     font-weight: bold;
-    padding: 0.35rem 1.25rem;
+    padding: 0.30rem 1.25rem;
     transition: background 0.2s, transform 0.2s;
 }
 .post-button:hover {
@@ -414,8 +414,8 @@
 .post-modal-content {
     animation: slideUp 0.25s ease;
     background: #ffffff;
+    border: 2px solid #1e392a;
     border-radius: 1rem;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
     max-height: 85vh;
     max-width: 700px;
     overflow-y: auto;
@@ -423,25 +423,6 @@
     position: relative;
     width: 100%;
     z-index: 100;
-}
-
-.post-modal-close {
-    background: none;
-    border: none;
-    border-radius: 0.5rem;
-    color: #1e392a;
-    cursor: pointer;
-    float: right;
-    font-size: 1.5rem;
-    padding: 0.25rem 0.5rem;
-    position: sticky;
-    top: 0;
-    transition: background 0.2s;
-    z-index: 100;
-}
-
-.post-modal-close:hover {
-    background: #e8f5ed;
 }
 
 /* Modal Post Card */
@@ -559,12 +540,12 @@
 
 .modal-comment-submit {
     background: #3cc47c;
-    border: none;
+    border: 1px solid #1e392a;
     border-radius: 0.5rem;
     color: #ffffff;
     cursor: pointer;
     font-weight: bold;
-    padding: 0.35rem 1.25rem;
+    padding: 0.25rem 1.25rem;
     transition: background 0.2s, transform 0.2s;
 }
 
