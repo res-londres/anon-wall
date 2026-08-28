@@ -24,9 +24,9 @@
             <div class="card-right">
                 <h2>Sign up to AnonWall</h2>
                 <p>Enter your private username</p>
-                <input type="text" id="username-input" placeholder="Username" maxLength="20" onkeydown="if (event.key === 'Enter') signUp();">
+                <input type="text" id="username-input" placeholder="Username" maxLength="20" onkeydown="if (event.key === 'Enter') auth.signUp();">
                 <p id="invalid-username-message"></p>
-                <button id="sign-up-button" onclick="signUp()">Sign up</button>
+                <button id="sign-up-button" onclick="auth.signUp()">Sign up</button>
             </div>
         </div>
     </div>
@@ -55,7 +55,7 @@
                             <select id="alt-name-select" class="alt-name-select">
                                 <option value="{new-alt}">+ Create New Alt</option>
                             </select>
-                            <button class="post-button" onclick="createPost()">Post</button>
+                            <button class="post-button" onclick="post.createPost()">Post</button>
                         </div>
                     </div>
                     <div class="post-creator-input">
@@ -79,7 +79,7 @@
     </main>
     <!-- Post Detail Modal -->
     <div id="post-modal" class="post-modal" style="display:none;">
-        <div class="post-modal-overlay" onclick="closePostModal()"></div>
+        <div class="post-modal-overlay" onclick="post.closePostModal()"></div>
         <div class="post-modal-content">
             <div id="post-detail-content">
                 <!-- post detail here -->
@@ -88,6 +88,6 @@
     </div>
     
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-    <script src="static/script.js"></script>
+    <script type="module" src="static/script.js"></script>
 </body>
 </html>
