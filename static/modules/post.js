@@ -18,7 +18,6 @@ export function createPost() {
         time: 'Just now', // Temporary
         comments: []
     };
-
     posts.push(newPost);
 
     postSubject.value = '';
@@ -78,7 +77,7 @@ export function createPostHTML(post, index) {
 // ---------- post-modal---------- //
 export function openPostModal(index) {
     currentPostIndex = index;
-    const post = posts[index];
+    const post = [...posts].reverse()[index];
     if (!post) return;
     
     const modalContent = document.getElementById('post-detail-content');
