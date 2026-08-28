@@ -1,4 +1,5 @@
 
+import { socket } from './socket.js';
 import * as miscHelp from './helpers/misc.js';
 
 export function checkSession() {
