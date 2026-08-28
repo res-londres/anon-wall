@@ -19,9 +19,9 @@
     padding: 3rem;
 }
 .loading-spinner {
-    animation: spin 1s ease infinite; 
+    animation: spin 1s ease infinite;
+    border: 4px solid #caf4dd; 
     border-radius: 50%;
-    border: 4px solid #caf4dd;
     border-top: 4px solid #1e392a;
     height: 40px;
     width: 40px;
@@ -148,9 +148,9 @@
     flex-direction: column;
     grid-row: 2;
     height: calc(100dvh - 3rem);
+    overflow-y: auto;
     position: sticky;
-    top: 3rem;
-    overflow-y: auto; 
+    top: 3rem; 
 }
 /* --- nav --- */
 .left-sidebar nav {
@@ -191,15 +191,15 @@
     background: rgba(0, 0, 0, 0.3);
 }
 .left-sidebar {
-    scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+    scrollbar-width: thin;
 }
 /* ----- content ------ */
 .content {
     grid-row: 2;
     height: calc(100dvh - 3rem);
-    padding: 1.25rem;
     overflow-y: auto;
+    padding: 1.25rem;
 }
 /* --- content-scrollbar --- */
 .content::-webkit-scrollbar {
@@ -216,8 +216,8 @@
     background: rgba(0, 0, 0, 0.25);
 }
 .content {
-    scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    scrollbar-width: thin;
 }
 /* ----- right-sidebar ----- */
 .right-sidebar {
@@ -237,7 +237,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem 1.25rem;
-    z-index: 10;
+    z-index: 100;
 }
 .post-creator-header {
     align-items: center;
@@ -262,8 +262,8 @@
     border-radius: 0.5rem;
     color: #1e392a;
     cursor: pointer;
-    padding: 0.25rem 1.25rem;
     outline: none;
+    padding: 0.25rem 1.25rem;
 }
 .alt-name-select:focus {
     border-color: #3cc47c;
@@ -301,8 +301,8 @@
     width: 100%;
 }
 .post-subject-input:focus {
-    outline: none;
     border-color: #3cc47c;
+    outline: none;
 }
 .post-content-input {
     background: #fafffd;
@@ -315,8 +315,8 @@
     width: 100%;
 }
 .post-content-input:focus {
-    outline: none;
     border-color: #3cc47c;
+    outline: none;
 }
 /* ----------! POST CARDS !---------- */
 .post-card {
@@ -388,56 +388,56 @@
 
 /* ----------! POST MODAL !---------- */
 .post-modal {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
+    padding: 1.5rem;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
+    z-index: 100;
 }
 
 .post-modal-overlay {
+    animation: fadeIn 0.2s ease;
+    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.4);
+    height: 100%;
+    left: 0;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(4px);
-    animation: fadeIn 0.2s ease;
 }
 
 .post-modal-content {
-    position: relative;
+    animation: slideUp 0.25s ease;
     background: #ffffff;
     border-radius: 1rem;
-    max-width: 700px;
-    width: 100%;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
     max-height: 85vh;
+    max-width: 700px;
     overflow-y: auto;
     padding: 1.5rem 2rem;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.25s ease;
-    z-index: 10000;
+    position: relative;
+    width: 100%;
+    z-index: 100;
 }
 
 .post-modal-close {
-    position: sticky;
-    top: 0;
-    float: right;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    border-radius: 0.5rem;
     color: #1e392a;
     cursor: pointer;
+    float: right;
+    font-size: 1.5rem;
     padding: 0.25rem 0.5rem;
-    border-radius: 0.5rem;
+    position: sticky;
+    top: 0;
     transition: background 0.2s;
-    z-index: 10;
+    z-index: 100;
 }
 
 .post-modal-close:hover {
@@ -448,21 +448,21 @@
 .modal-post-card {
     background: #ffffff;
     border-bottom: 2px solid #e8f5ed;
-    padding-bottom: 1rem;
     margin-bottom: 1rem;
+    padding-bottom: 1rem;
 }
 
 .modal-post-header {
+    align-items: center;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     margin-bottom: 0.75rem;
 }
 
 .modal-post-attribution {
-    font-weight: bold;
     color: #1e392a;
     font-size: 1.05rem;
+    font-weight: bold;
 }
 
 .modal-post-time {
@@ -471,9 +471,9 @@
 }
 
 .modal-post-subject {
-    font-weight: bold;
     color: #1e392a;
     font-size: 1.1rem;
+    font-weight: bold;
     margin-bottom: 0.5rem;
 }
 
@@ -481,16 +481,16 @@
     color: #1e392a;
     font-size: 1rem;
     line-height: 1.6;
-    word-wrap: break-word;
     white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .modal-post-footer {
+    border-top: 1px solid #e8f5ed;
     display: flex;
     gap: 1.5rem;
-    padding: 0.75rem 0;
-    border-top: 1px solid #e8f5ed;
     margin-top: 0.75rem;
+    padding: 0.75rem 0;
 }
 
 /* Modal Comments */
@@ -499,17 +499,17 @@
 }
 
 .modal-comments-title {
-    font-weight: 600;
     color: #1e392a;
     font-size: 0.95rem;
+    font-weight: 600;
     margin-bottom: 0.75rem;
 }
 
 .modal-comment-item {
+    border-bottom: 1px solid #f0faf5;
     display: flex;
     gap: 0.5rem;
     padding: 0.5rem 0;
-    border-bottom: 1px solid #f0faf5;
 }
 
 .modal-comment-time {
@@ -518,10 +518,10 @@
 }
 
 .modal-comment-attribution {
-    font-weight: 600;
     color: #1e392a;
-    white-space: nowrap;
     font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .modal-comment-text {
@@ -531,27 +531,30 @@
 }
 
 .modal-comment-input-container {
+    border-top: 1px solid #e8f5ed;
     display: flex;
     gap: 0.5rem;
     margin-top: 0.75rem;
     padding-top: 0.5rem;
-    border-top: 1px solid #e8f5ed;
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
 }
 
 .modal-comment-input {
-    flex: 1;
+    background: #fafffd;
     border: 2px solid #e8f5ed;
     border-radius: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
+    flex: 1;
     font-family: inherit;
-    background: #fafffd;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
     transition: border-color 0.2s;
 }
 
 .modal-comment-input:focus {
-    outline: none;
     border-color: #3cc47c;
+    outline: none;
 }
 
 .modal-comment-submit {
@@ -610,41 +613,41 @@
     background: rgba(0, 0, 0, 0.25);
 }
 .post-modal-content {
-    scrollbar-width: thin;
     scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    scrollbar-width: thin;
 }
 /* ----------! MODAL COMMENT LIKES !---------- */
 .modal-comment-item {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
     border-bottom: 1px solid #f0faf5;
+    display: flex;
     gap: 0.5rem;
+    justify-content: space-between;
+    padding: 0.5rem 0;
 }
 
 .modal-comment-left {
-    display: flex;
-    gap: 0.5rem;
     align-items: baseline;
+    display: flex;
     flex: 1;
+    gap: 0.5rem;
     min-width: 0;
 }
 
 .modal-comment-like-button {
+    align-items: center;
     background: none;
     border: none;
+    border-radius: 0.25rem;
+    color: #828081;
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    color: #828081;
-    font-size: 0.85rem;
-    padding: 0.15rem 0.35rem;
-    border-radius: 0.25rem;
-    transition: all 0.2s;
     flex-shrink: 0;
+    font-size: 0.85rem;
     line-height: 1.2;
+    padding: 0.15rem 0.35rem;
+    transition: all 0.2s;
 }
 
 .modal-comment-like-button:hover {
@@ -660,9 +663,9 @@
 }
 
 .modal-comment-like-button .modal-comment-like-count {
+    color: #828081;
     font-size: 0.65rem;
     font-weight: 600;
-    color: #828081;
 }
 
 .modal-comment-like-button.liked .modal-comment-like-count {
@@ -670,10 +673,10 @@
 }
 /* ----------! EMPTY WALL !---------- */
 .empty-wall {
-    text-align: center;
     color: #828081;
-    padding: 2rem 0;
     font-size: 0.95rem;
+    padding: 2rem 0;
+    text-align: center;
 }
 
 /*

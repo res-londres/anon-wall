@@ -100,7 +100,8 @@ export function createPostModalHTML(post, index) {
 
     let commentsHTML = '';
     if (post.comments && post.comments.length > 0) {
-        post.comments.forEach((comment, commentIndex) => {
+        let commentsReversed = [...post.comments].reverse();
+        commentsReversed.forEach((comment, commentIndex) => {
             const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
             commentsHTML += `
                 <div class="modal-comment-item">
@@ -193,8 +194,9 @@ export function submitCommentModal(index) {
         renderPosts();
         
         const modalContentScroll = document.querySelector('.post-modal-content');
-        if (modalContentScroll) {
-            modalContentScroll.scrollTop = modalContentScroll.scrollHeight;
+        const modalCommentsSection = document.querySelector('.modal-comments-section');
+        if (modalContentScroll && modalCommentsSection) {
+            modalContentScroll.scrollTop = modalCommentsSection.offsetTop;
         }
     }
 }
