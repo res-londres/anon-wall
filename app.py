@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit
-import helpers as help
+import helpers.cookie as cookie
+import helpers.id as id
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -16,7 +18,7 @@ def home():
 def check_session():
     '''HTTP endpoint to check if user has a session'''
     print(f'[HTTP] checking cookie..')
-    user_id = help.Cookies.get_user_cookie()
+    user_id = cookie.get_user_cookie()
     if user_id:
         print(f'[HTTP] cookie found: {user_id}')
         return jsonify({'active': True})
@@ -30,7 +32,7 @@ def handle_sign_up(data):
     username = data['username']
     existing_ids = [] # TODO: change this when we work on database
     try:
-        user_id = help.ID.generate_user_id(username, existing_ids)
+        user_id = id.generate_user_id(username, existing_ids)
     except ValueError:
         emit('join_error', {'reason': 'bad_name'})
         return
