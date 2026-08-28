@@ -9,7 +9,6 @@ export function createPost() {
     const postContent = document.getElementById('post-content-input');
     const subject = postSubject.value.trim();
     const content = postContent.value.trim();
-
     const newPost = {
         attribution: 'anon', // Temporary
         subject: subject || '[NO SUBJECT]',
@@ -19,6 +18,7 @@ export function createPost() {
         time: 'Just now', // Temporary
         comments: []
     };
+
     posts.push(newPost);
 
     postSubject.value = '';
@@ -39,13 +39,12 @@ export function renderPosts() {
         `;
         return;
     }
+
     let postsReversed = [...posts].reverse();
-    
     let html = '';
     postsReversed.forEach((post, index) => {
         html += createPostHTML(post, index);
     });
-    
     wall.innerHTML = html;
 }
 
@@ -63,7 +62,7 @@ export function createPostHTML(post, index) {
             <div class="post-subject">${escapeHTML(post.subject)}</div>
             <div class="post-content-preview">${escapeHTML(postContentPreview)}</div>
             <div class="post-footer" onclick="event.stopPropagation();">
-                <button class="post-action-button" ${post.liked ? 'liked' : ''}" onclick="post.toggleLike(${index})">
+                <button class="post-action-button ${post.liked ? 'liked' : ''}" onclick="post.toggleLike(${index})">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${post.likes}</span>
                 </button>
@@ -77,17 +76,16 @@ export function createPostHTML(post, index) {
 }
 
 // ---------- post-modal---------- //
-
 export function openPostModal(index) {
     currentPostIndex = index;
     const post = posts[index];
     if (!post) return;
     
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createModalHTML(post, index);
+    modalContent.innerHTML = createPostModalHTML(post, index);
     
     document.getElementById('post-modal').style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // Prevent scrolling behind modal
+    document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
 }
 
 export function closePostModal() {
@@ -96,7 +94,7 @@ export function closePostModal() {
     currentPostIndex = null;
 }
 
-export function createModalHTML(post, index) {
+export function createPostModalHTML(post, index) {
     const commentsCount = post.comments ? post.comments.length : 0;
     const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
 
@@ -110,8 +108,7 @@ export function createModalHTML(post, index) {
                         <span class="modal-comment-attribution">${escapeHTML(comment.attribution)}</span>
                         <span class="modal-comment-text">${escapeHTML(comment.content)}</span>
                     </div>
-                    <button class="modal-comment-like-button ${comment.liked ? 'liked' : ''}" 
-                            onclick="post.toggleCommentLike(${index}, ${commentIndex})">
+                    <button class="modal-comment-like-button ${comment.liked ? 'liked' : ''}" onclick="post.toggleCommentLike(${index}, ${commentIndex})">
                         <i class="${commentLikeIcon}"></i>
                         <span class="modal-comment-like-count">${comment.likes}</span>
                     </button>
@@ -133,11 +130,11 @@ export function createModalHTML(post, index) {
             <div class="modal-post-subject">${escapeHTML(post.subject)}</div>
             <div class="modal-post-content">${escapeHTML(post.content)}</div>
             <div class="modal-post-footer">
-                <button class="post-action-button" ${post.liked ? 'liked' : ''}" onclick="post.toggleLikeModal(${index})">
+                <button class="post-action-button ${post.liked ? 'liked' : ''}" onclick="post.toggleLikeModal(${index})">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${post.likes}</span>
                 </button>
-                <button class="post-action-button">
+                <button class="post-action-button" onclick=post.closePostModal()>
                     <span class="comment-icon"><i class="fa-regular fa-comment"></i></span>
                     <span>${commentsCount}</span>
                 </button>
@@ -152,7 +149,7 @@ export function createModalHTML(post, index) {
             <div class="modal-comment-input-container">
                 <input type="text" class="modal-comment-input" placeholder="Write a comment..." 
                        id="modal-comment-input" 
-                       onkeypress="if(event.key==='Enter') submitCommentModal(${index})">
+                       onkeypress="if(event.key==='Enter') post.submitCommentModal(${index})">
                 <button class="modal-comment-submit" onclick="post.submitCommentModal(${index})">Reply</button>
             </div>
         </div>
@@ -166,14 +163,13 @@ export function toggleLikeModal(index) {
         post.liked = !post.liked;
         post.likes += post.liked ? 1 : -1;
         
-        // Re-render the modal
         const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createModalHTML(post, index);
+        modalContent.innerHTML = createPostModalHTML(post, index);
         
-        // Re-render the wall too
         renderPosts();
     }
 }
+
 export function submitCommentModal(index) {
     const commentInput = document.getElementById('modal-comment-input');
     const comment = commentInput.value.trim();
@@ -185,17 +181,17 @@ export function submitCommentModal(index) {
             attribution: 'anon', // Temporary
             content: comment,
             likes: 0,
-            liked: false
+            liked: false,
+            time: 'Just now..' // Temporary
         });
         
         commentInput.value = '';
         
         const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createModalHTML(post, index);
+        modalContent.innerHTML = createPostModalHTML(post, index);
         
         renderPosts();
         
-        // scroll to bottom 
         const modalContentScroll = document.querySelector('.post-modal-content');
         if (modalContentScroll) {
             modalContentScroll.scrollTop = modalContentScroll.scrollHeight;
@@ -211,6 +207,7 @@ export function toggleLike(index) {
         renderPosts();
     }
 }
+
 export function toggleCommentLike(postIndex, commentIndex) {
     const post = posts[postIndex];
     if (!post || !post.comments || !post.comments[commentIndex]) return;
@@ -220,7 +217,7 @@ export function toggleCommentLike(postIndex, commentIndex) {
     comment.likes += comment.liked ? 1 : -1;
     
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createModalHTML(post, postIndex);
+    modalContent.innerHTML = createPostModalHTML(post, postIndex);
     
     renderPosts();
 }

@@ -380,10 +380,9 @@
     transition: all 0.3s;
 }
 .post-action-button:hover {
-    color: #1e392a;
     transform: scale(1.1);
 }
-.liked {
+.post-action-button.liked {
     color: #3cc47c;
 }
 
@@ -511,6 +510,11 @@
     gap: 0.5rem;
     padding: 0.5rem 0;
     border-bottom: 1px solid #f0faf5;
+}
+
+.modal-comment-time {
+    color: #828081;
+    font-size: 0.75rem;
 }
 
 .modal-comment-attribution {
@@ -644,7 +648,6 @@
 }
 
 .modal-comment-like-button:hover {
-    background: #f0faf5;
     transform: scale(1.05);
 }
 
