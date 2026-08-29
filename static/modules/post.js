@@ -2,6 +2,7 @@
 import { escapeHTML } from './helpers/misc.js';
 
 // ----------- event-handlers ----------- //
+// post creator
 document.getElementById('post-creator').addEventListener('click', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
@@ -13,7 +14,7 @@ document.getElementById('post-creator').addEventListener('click', function(event
         }
     }
 });
-
+// posts
 document.getElementById('wall').addEventListener('click', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
@@ -29,7 +30,7 @@ document.getElementById('wall').addEventListener('click', function(event) {
         }
     }
 });
-
+// post modal
 document.getElementById('post-modal').addEventListener('click', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
@@ -45,6 +46,50 @@ document.getElementById('post-modal').addEventListener('click', function(event) 
         } else if (action === 'likeComment') {
             toggleCommentLike(postIndex, commentIndex);
         } else if (action === 'submitComment') {
+            submitCommentModal(postIndex);
+        }
+    }
+});
+// input
+document.getElementById('post-creator').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        return; 
+    }
+    if (event.key !== 'Enter') return;
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+
+        event.stopPropagation();
+        event.preventDefault();
+        if (action === 'enterSubject') {
+            const contentInput = document.getElementById('post-content-input');
+            contentInput.focus();
+            if (contentInput.value.length > 0) {
+                const end = contentInput.value.length;
+                contentInput.setSelectionRange(end, end);
+            } else {
+                contentInput.setSelectionRange(0, 0);
+            }
+        } else if (action === 'enterContent') {
+            createPost();
+        }
+    }
+});
+
+document.getElementById('post-modal').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        return; 
+    }
+    if (event.key !== 'Enter') return;
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+
+        event.stopPropagation();
+        event.preventDefault();
+        if (action === 'enterComment') {
             submitCommentModal(postIndex);
         }
     }
@@ -220,8 +265,8 @@ export function createPostModalHTML(post, postIndex) {
                 ${commentsHTML}
             </div>
             <div class="modal-comment-input-container">
-                <input type="text" class="modal-comment-input" placeholder="Write a comment..." 
-                       id="modal-comment-input" data-postindex="${postIndex}">
+                <input type="text" class="modal-comment-input" data-action="enterComment" data-postindex="${postIndex}" placeholder="Write a comment..." 
+                       id="modal-comment-input">
                 <button class="modal-comment-submit" data-action="submitComment" data-postindex="${postIndex}">Reply</button>
             </div>
         </div>
@@ -229,25 +274,25 @@ export function createPostModalHTML(post, postIndex) {
 }
 
 // ---------- modal-actions ---------- //
-export function toggleLikeModal(index) {
-    const post = posts[index];
+export function toggleLikeModal(postIndex) {
+    const post = posts[postIndex];
     if (post) {
         post.liked = !post.liked;
         post.likes += post.liked ? 1 : -1;
         
         const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createPostModalHTML(post, index);
+        modalContent.innerHTML = createPostModalHTML(post, postIndex);
         
         renderPosts();
     }
 }
 
-export function submitCommentModal(index) {
+export function submitCommentModal(postIndex) {
     const commentInput = document.getElementById('modal-comment-input');
     const comment = commentInput.value.trim();
     if (!comment) return;
     
-    const post = posts[index];
+    const post = posts[postIndex];
     if (post) {
         post.comments.push({
             attribution: 'anon', // Temporary
@@ -260,7 +305,7 @@ export function submitCommentModal(index) {
         commentInput.value = '';
         
         const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createPostModalHTML(post, index);
+        modalContent.innerHTML = createPostModalHTML(post, postIndex);
         
         renderPosts();
         
@@ -272,8 +317,8 @@ export function submitCommentModal(index) {
     }
 }
 
-export function toggleLike(index) {
-    const post = posts[index];
+export function toggleLike(postIndex) {
+    const post = posts[postIndex];
     if (post) {
         post.liked = !post.liked;
         post.likes += post.liked ? 1 : -1;
