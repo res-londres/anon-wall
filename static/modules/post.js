@@ -31,7 +31,7 @@ document.getElementById('wall').addEventListener('click', function(event) {
 });
 
 document.getElementById('post-modal').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action');
+    const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
         const action = actionElement.dataset.action;
         const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
