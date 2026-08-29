@@ -265,8 +265,7 @@ export function createPostModalHTML(post, postIndex) {
                 ${commentsHTML}
             </div>
             <div class="modal-comment-input-container">
-                <input type="text" class="modal-comment-input" data-action="enterComment" data-postindex="${postIndex}" placeholder="Write a comment..." 
-                       id="modal-comment-input">
+                <input type="text" class="modal-comment-input" data-action="enterComment" data-postindex="${postIndex}" placeholder="Write a comment..." id="modal-comment-input" maxlength="1000">
                 <button class="modal-comment-submit" data-action="submitComment" data-postindex="${postIndex}">Reply</button>
             </div>
         </div>

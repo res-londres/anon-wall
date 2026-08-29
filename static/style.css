@@ -227,6 +227,8 @@
     top: 3dvh;
 }
 
+/* -- vibe-coded zone -- */
+/* tinatamad nako ayusen */
 /* -------------------- !!! CONTENTS !!! -------------------- */
 /* --------------- !! MAIN WALL !! --------------- */
 /* ---------- ! POST CREATOR ! ---------- */
@@ -456,6 +458,8 @@
     font-size: 1.1rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .modal-post-content {
@@ -491,11 +495,15 @@
     display: flex;
     gap: 0.5rem;
     padding: 0.5rem 0;
+    align-items: flex-start; /* Align items to the top */
 }
 
-.modal-comment-time {
-    color: #828081;
-    font-size: 0.75rem;
+.modal-comment-left {
+    display: flex;
+    gap: 0.5rem;
+    flex: 1;
+    min-width: 0;
+    align-items: flex-start;
 }
 
 .modal-comment-attribution {
@@ -509,6 +517,13 @@
     color: #1e392a;
     font-size: 0.9rem;
     word-wrap: break-word;
+    overflow-wrap: break-word;
+    flex: 1;
+    min-width: 0;
+}
+
+.modal-comment-like-button {
+    flex-shrink: 0;
 }
 
 .modal-comment-input-container {
