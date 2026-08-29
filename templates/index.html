@@ -24,9 +24,9 @@
             <div class="card-right">
                 <h2>Sign up to AnonWall</h2>
                 <p>Enter your private username</p>
-                <input type="text" id="username-input" placeholder="Username" maxLength="20" onkeydown="if (event.key === 'Enter') auth.signUp();">
+                <input type="text" id="username-input" data-action="enterUsername" placeholder="Username" maxLength="20">
                 <p id="invalid-username-message"></p>
-                <button id="sign-up-button" onclick="auth.signUp()">Sign up</button>
+                <button id="sign-up-button" data-action="signUp">Sign up</button>
             </div>
         </div>
     </div>

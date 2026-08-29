@@ -2,6 +2,37 @@
 import { socket } from './socket.js';
 import * as miscHelp from './helpers/misc.js';
 
+// --------- event-listeners ----------- //
+document.getElementById('sign-up-container').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        
+        event.stopPropagation();
+        if (action === 'signUp') {
+            signUp();
+        }
+    }
+});
+
+document.getElementById('sign-up-container').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        return; 
+    }
+    if (event.key !== 'Enter') return;
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+
+        event.stopPropagation();
+        event.preventDefault();
+        if (action === 'enterUsername') {
+            signUp();
+        }
+    }
+});
+
+// --------- auth ----------- //
 export function checkSession() {
     fetch('/check_session')
         .then(response => response.json())
