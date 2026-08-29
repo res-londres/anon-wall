@@ -7,6 +7,8 @@ from misc import convert_datetime_to_isoformat
 
 load_dotenv()
 
+USER_COLUMNS = ('user_id', 'socket_id', 'username', 'is_deleted', 'deleted_at', 'created_at')
+
 # ---------- HELPER ---------- #
 class DBHelp:
     @staticmethod
@@ -90,13 +92,22 @@ class Users:
         DBHelp.close_conn_cur(conn, cur, commit=True)
 
     @staticmethod
-    def get_all_users():
+    def get_all_users(*cols):
         conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
-        cur.execute('SELECT * FROM users ORDER BY created_at DESC')
+        columns = ', '.join(col for col in cols if col in USER_COLUMNS)
+        if not columns:
+            columns = '*'
+        cur.execute(f'SELECT {columns} FROM users ORDER BY created_at DESC')
         users = cur.fetchall()
         DBHelp.close_conn_cur(conn, cur)
-        for user in users:
-            convert_datetime_to_isoformat(user, ('created_at', 'deleted_at'))
+        if columns == '*' or 'created_at' in cols or 'deleted_at' in cols:
+            fields_to_convert = []
+            if 'created_at' in cols or columns == '*':
+                fields_to_convert.append('created_at')
+            if 'deleted_at' in cols or columns == '*':
+                fields_to_convert.append('deleted_at')
+            for user in users:
+                convert_datetime_to_isoformat(user, tuple(fields_to_convert))
         return users
 
 # ---------- ALT NAMES ----------- #
