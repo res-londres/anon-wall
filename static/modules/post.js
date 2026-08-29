@@ -1,6 +1,7 @@
 
 import { escapeHTML } from './helpers/misc.js';
 
+// ----------- posts ----------- //
 export let posts = [];
 export let currentPostIndex = null; 
 
@@ -39,11 +40,10 @@ export function renderPosts() {
         return;
     }
 
-    let postsReversed = [...posts].reverse();
     let html = '';
-    postsReversed.forEach((post, index) => {
-        html += createPostHTML(post, index);
-    });
+    for (let postIndex = posts.length - 1; postIndex >= 0; postIndex--) {
+        html += createPostHTML(posts[postIndex], postIndex);
+    }
     wall.innerHTML = html;
 }
 
@@ -77,7 +77,7 @@ export function createPostHTML(post, index) {
 // ---------- post-modal---------- //
 export function openPostModal(index) {
     currentPostIndex = index;
-    const post = [...posts].reverse()[index];
+    const post = posts[index];
     if (!post) return;
     
     const modalContent = document.getElementById('post-detail-content');
@@ -99,8 +99,8 @@ export function createPostModalHTML(post, index) {
 
     let commentsHTML = '';
     if (post.comments && post.comments.length > 0) {
-        let commentsReversed = [...post.comments].reverse();
-        commentsReversed.forEach((comment, commentIndex) => {
+        for (let commentIndex = post.comments.length - 1; commentIndex >= 0; commentIndex--) {
+            const comment = post.comments[commentIndex];
             const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
             commentsHTML += `
                 <div class="modal-comment-item">
@@ -114,7 +114,7 @@ export function createPostModalHTML(post, index) {
                     </button>
                 </div>
             `;
-        });
+        }
     } else {
         commentsHTML = `
             <div class="empty-modal-comments">No comments yet..</div>
