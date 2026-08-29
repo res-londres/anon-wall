@@ -3,7 +3,7 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from psycopg2.extras import RealDictCursor
-from misc import convert_datetime_to_isoformat
+from .misc import convert_datetime_to_isoformat
 
 load_dotenv()
 
@@ -45,7 +45,7 @@ class Users:
             'user_id': user_id,
             'username': username,
             'is_deleted': False,
-            'created_at': None
+            'created_at': None,
         }
 
     @staticmethod
@@ -62,6 +62,7 @@ class Users:
 
     @staticmethod
     def get_user_by_username(username, include_deleted=False):
+        # THING IS, USERS CAN HAVE SAME USERNAMES. WHATS THE POINT OF THIS? JUST GET USER BY ID
         conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
         query = 'SELECT * FROM users WHERE username = %s'
         if not include_deleted:

@@ -1,14 +1,17 @@
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 import helpers.cookie as cookie
+import helpers.database as db
 import helpers.id as id
+import helpers.misc as misc
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app, cors_allowed_origins='*')
 
+active_users = {}
 # ---------- routing ---------- #
 @app.route('/')
 def home():
@@ -30,14 +33,30 @@ def check_session():
 def handle_sign_up(data):
     print(f'[SIGN-UP] new user signing up..')
     username = data['username']
-    existing_ids = [] # TODO: change this when we work on database
+    print(f'[SIGN-UP] username found: {username}')
+    existing_ids = {user.get('user_id') for user in active_users.values()}
+    print(f'[SIGN-UP] existing ids found: {existing_ids}')
     try:
         user_id = id.generate_user_id(username, existing_ids)
+        print(f'[SIGN-UP] id generated: {user_id}')  
     except ValueError:
         emit('join_error', {'reason': 'bad_name'})
         return
+    user_data = db.Users.create_user(user_id, username)
+    print(f'[SIGN-UP] user created: {user_data}')
+    socket_id = request.sid
+    print(f'[SIGN-UP] sid requested: {socket_id}')
+    db.Users.update_user_socket_id(user_id, socket_id)
+    print(f'[SIGN-UP] user socket id updated..')
+    misc.store_in_active_users(active_users, user_id, socket_id, user_data)
+    print(f'[SIGN-UP] new user stored in active users: {active_users}')
     print(f'[SIGN-UP] sign up success: {user_id}')
-    emit('sign-up-success', {'user_id': user_id, 'username': username,'set_cookie': True})
+    emit('sign-up-success', {
+        'user_data': user_data,
+        'user_id': user_id, 
+        'username': username,
+        'set_cookie': True
+    })
 
 # ---------- etc ---------- #
 @socketio.on('connect')
