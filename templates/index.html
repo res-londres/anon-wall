@@ -50,14 +50,14 @@
                 <!-- TEST: REMOVE THIS -->
                 <button onclick="cookieHelp.deleteCookie('user_id')">Magic Button</button> 
                 <!-- Post Creator -->
-                <div class="post-creator">
+                <div class="post-creator" id="post-creator">
                     <div class="post-creator-header">
                         <p class="post-creator-label">Create post</p>
                         <div class="post-creator-controls">
                             <select id="alt-name-select" class="alt-name-select">
                                 <option value="{new-alt}">+ Create New Alt</option>
                             </select>
-                            <button class="post-button" onclick="post.createPost()">Post</button>
+                            <button class="post-button" data-action="createPost">Post</button>
                         </div>
                     </div>
                     <div class="post-creator-input">
@@ -81,7 +81,7 @@
     </main>
     <!-- Post Detail Modal -->
     <div id="post-modal" class="post-modal" style="display:none;">
-        <div class="post-modal-overlay" onclick="post.closePostModal()"></div>
+        <div class="post-modal-overlay" data-action="closePostModal"></div>
         <div class="post-modal-content">
             <div id="post-detail-content">
                 <!-- post detail here -->

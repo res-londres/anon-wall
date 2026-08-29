@@ -1,6 +1,55 @@
 
 import { escapeHTML } from './helpers/misc.js';
 
+// ----------- event-handlers ----------- //
+document.getElementById('post-creator').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        
+        event.stopPropagation();
+        if (action === 'createPost') {
+            createPost();
+        }
+    }
+});
+
+document.getElementById('wall').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+        
+        event.stopPropagation();
+        if (action === 'doNothing') {
+        } else if (action === 'likePost') {
+            toggleLike(postIndex);
+        } else if (action === 'openPostModal') {
+            openPostModal(postIndex);
+        }
+    }
+});
+
+document.getElementById('post-modal').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+        const commentIndex = actionElement.hasAttribute('data-commentindex') ? parseInt(actionElement.dataset.commentindex) : null;
+        
+        event.stopPropagation();
+        if (action === 'closePostModal') {
+            closePostModal();
+        } else if (action === 'likePost') {
+            toggleLikeModal(postIndex);
+        } else if (action === 'likeComment') {
+            toggleCommentLike(postIndex, commentIndex);
+        } else if (action === 'submitComment') {
+            submitCommentModal(postIndex);
+        }
+    }
+});
+
 // ----------- posts ----------- //
 export let posts = [];
 export let currentPostIndex = null; 
@@ -47,26 +96,32 @@ export function renderPosts() {
     wall.innerHTML = html;
 }
 
-export function createPostHTML(post, index) {
+export function createPostHTML(post, postIndex) {
+    const classLiked = post.liked ? 'liked' : '';
     const commentsCount = post.comments ? post.comments.length : 0;
+    const commentIcon = 'fa-regular fa-comment';
+    const likesCount = post.likes;
     const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
-    const postContentPreview = post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content
+    const postAttribution = escapeHTML(post.attribution);
+    const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
+    const postSubject = escapeHTML(post.subject);
+    const postTime = post.time;
     
     return `
-        <div class="post-card" onclick="post.openPostModal(${index})">
+        <div class="post-card" data-action="openPostModal" data-postindex="${postIndex}">
             <div class="post-header">
-                <span class="post-attribution">${escapeHTML(post.attribution)}</span>
-                <span class="post-time">${post.time}</span>
+                <span class="post-attribution">${postAttribution}</span>
+                <span class="post-time">${postTime}</span>
             </div>
-            <div class="post-subject">${escapeHTML(post.subject)}</div>
-            <div class="post-content-preview">${escapeHTML(postContentPreview)}</div>
-            <div class="post-footer" onclick="event.stopPropagation();">
-                <button class="post-action-button ${post.liked ? 'liked' : ''}" onclick="post.toggleLike(${index})">
+            <div class="post-subject">${postSubject}</div>
+            <div class="post-content-preview">${postContentPreview}</div>
+            <div class="post-footer" data-action="doNothing">
+                <button class="post-action-button ${classLiked}" data-action="likePost" data-postindex="${postIndex}">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
-                    <span class="like-count">${post.likes}</span>
+                    <span class="like-count">${likesCount}</span>
                 </button>
-                <button class="post-action-button" onclick="post.openPostModal(${index})">
-                    <span class="comment-icon"><i class="fa-regular fa-comment"></i></span>
+                <button class="post-action-button" data-action="openPostModal" data-postindex="${postIndex}">
+                    <span class="comment-icon"><i class="${commentIcon}"></i></span>
                     <span>${commentsCount}</span>
                 </button>
             </div>
@@ -75,13 +130,13 @@ export function createPostHTML(post, index) {
 }
 
 // ---------- post-modal---------- //
-export function openPostModal(index) {
-    currentPostIndex = index;
-    const post = posts[index];
+export function openPostModal(postIndex) {
+    currentPostIndex = postIndex;
+    const post = posts[postIndex];
     if (!post) return;
     
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(post, index);
+    modalContent.innerHTML = createPostModalHTML(post, postIndex);
     
     document.getElementById('post-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
@@ -93,24 +148,28 @@ export function closePostModal() {
     currentPostIndex = null;
 }
 
-export function createPostModalHTML(post, index) {
-    const commentsCount = post.comments ? post.comments.length : 0;
-    const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+export function createCommentsHTML(comments, postIndex) {
+    const commentsCount = comments ? comments.length : 0;
 
     let commentsHTML = '';
-    if (post.comments && post.comments.length > 0) {
-        for (let commentIndex = post.comments.length - 1; commentIndex >= 0; commentIndex--) {
-            const comment = post.comments[commentIndex];
+    if (comments && commentsCount > 0) {
+        for (let commentIndex = commentsCount - 1; commentIndex >= 0; commentIndex--) {
+            const comment = comments[commentIndex];
+            const commentAttribution = escapeHTML(comment.attribution);
+            const commentContent = escapeHTML(comment.content);
             const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+            const commentLikesCount = comment.likes;
+            const classCommentLiked = comment.liked ? 'liked' : '';
+
             commentsHTML += `
-                <div class="modal-comment-item">
+                <div class="modal-comment-item" data-commentindex="${commentIndex}">
                     <div class="modal-comment-left">
-                        <span class="modal-comment-attribution">${escapeHTML(comment.attribution)}</span>
-                        <span class="modal-comment-text">${escapeHTML(comment.content)}</span>
+                        <span class="modal-comment-attribution">${commentAttribution}</span>
+                        <span class="modal-comment-text">${commentContent}</span>
                     </div>
-                    <button class="modal-comment-like-button ${comment.liked ? 'liked' : ''}" onclick="post.toggleCommentLike(${index}, ${commentIndex})">
+                    <button class="modal-comment-like-button ${classCommentLiked}" data-action="likeComment" data-postindex="${postIndex}" data-commentindex="${commentIndex}">
                         <i class="${commentLikeIcon}"></i>
-                        <span class="modal-comment-like-count">${comment.likes}</span>
+                        <span class="modal-comment-like-count">${commentLikesCount}</span>
                     </button>
                 </div>
             `;
@@ -120,22 +179,36 @@ export function createPostModalHTML(post, index) {
             <div class="empty-modal-comments">No comments yet..</div>
         `;
     }
-    
+    return commentsHTML;
+}
+
+export function createPostModalHTML(post, postIndex) {
+    const classLiked = post.liked ? 'liked' : '';
+    const comments = post.comments;
+    const commentIcon = 'fa-regular fa-comment';
+    const commentsCount = post.comments ? post.comments.length : 0;
+    const commentsHTML = createCommentsHTML(comments, postIndex);
+    const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    const likesCount = post.likes;
+    const postAttribution = escapeHTML(post.attribution);
+    const postContent = escapeHTML(post.content);
+    const postSubject = escapeHTML(post.subject);
+
     return `
         <div class="modal-post-card">
             <div class="modal-post-header">
-                <span class="modal-post-attribution">${escapeHTML(post.attribution)}</span>
+                <span class="modal-post-attribution">${postAttribution}</span>
                 <span class="modal-post-time">${post.time}</span>
             </div>
-            <div class="modal-post-subject">${escapeHTML(post.subject)}</div>
-            <div class="modal-post-content">${escapeHTML(post.content)}</div>
+            <div class="modal-post-subject">${postSubject}</div>
+            <div class="modal-post-content">${postContent}</div>
             <div class="modal-post-footer">
-                <button class="post-action-button ${post.liked ? 'liked' : ''}" onclick="post.toggleLikeModal(${index})">
+                <button class="post-action-button ${classLiked}" data-action="likePost" data-postindex="${postIndex}">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
-                    <span class="like-count">${post.likes}</span>
+                    <span class="like-count">${likesCount}</span>
                 </button>
-                <button class="post-action-button" onclick=post.closePostModal()>
-                    <span class="comment-icon"><i class="fa-regular fa-comment"></i></span>
+                <button class="post-action-button" data-action="closePostModal">
+                    <span class="comment-icon"><i class="${commentIcon}"></i></span>
                     <span>${commentsCount}</span>
                 </button>
             </div>
@@ -148,9 +221,8 @@ export function createPostModalHTML(post, index) {
             </div>
             <div class="modal-comment-input-container">
                 <input type="text" class="modal-comment-input" placeholder="Write a comment..." 
-                       id="modal-comment-input" 
-                       onkeypress="if(event.key==='Enter') post.submitCommentModal(${index})">
-                <button class="modal-comment-submit" onclick="post.submitCommentModal(${index})">Reply</button>
+                       id="modal-comment-input" data-postindex="${postIndex}">
+                <button class="modal-comment-submit" data-action="submitComment" data-postindex="${postIndex}">Reply</button>
             </div>
         </div>
     `;
