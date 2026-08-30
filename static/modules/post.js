@@ -38,9 +38,9 @@ export function renderPosts() {
     }
 
     let html = '';
-    for (let postIndex = posts.length - 1; postIndex >= 0; postIndex--) {
-        html += createPostHTML(posts[postIndex], postIndex);
-    }
+    posts.forEach(function(post, postIndex) {
+        html += createPostHTML(post, postIndex);
+    });
     wall.innerHTML = html;
 }
 
