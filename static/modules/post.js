@@ -1,5 +1,7 @@
 
-import { escapeHTML } from './helpers/misc.js';
+import { socket } from './socket.js';
+import { userProfile } from './userProfile.js';
+import { escapeHTML, formatTime } from './helpers/misc.js';
 
 // ----------- event-handlers ----------- //
 // post creator
@@ -100,17 +102,20 @@ export let posts = [];
 export let currentPostIndex = null; 
 
 export function createPost() {
+    const user_id = userProfile.user_id;
+    const username = userProfile.username;
     const postSubject = document.getElementById('post-subject-input');
     const postContent = document.getElementById('post-content-input');
     const subject = postSubject.value.trim();
     const content = postContent.value.trim();
     const newPost = {
-        attribution: 'anon', // Temporary
+        user_id: user_id,
+        attribution: username, // TODO: should be alt name!
         subject: subject || '[NO SUBJECT]',
         content: content,
         likes: 0,
-        liked: false,
-        time: 'Just now', // Temporary
+        liked: false, // TODO: connect liked to its liker
+        created_at: new Date().toISOString(),
         comments: []
     };
     posts.push(newPost);
@@ -119,6 +124,9 @@ export function createPost() {
     postContent.value = '';
     renderPosts();
     document.querySelector('.content').scrollTop = 0;
+    socket.emit('create-post-success', {
+        post: newPost
+    })
 }
 
 export function renderPosts() {
@@ -150,13 +158,13 @@ export function createPostHTML(post, postIndex) {
     const postAttribution = escapeHTML(post.attribution);
     const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
     const postSubject = escapeHTML(post.subject);
-    const postTime = post.time;
+    const postCreatedAt = formatTime(post.created_at);
     
     return `
         <div class="post-card" data-action="openPostModal" data-postindex="${postIndex}">
             <div class="post-header">
                 <span class="post-attribution">${postAttribution}</span>
-                <span class="post-time">${postTime}</span>
+                <span class="post-time">${postCreatedAt}</span>
             </div>
             <div class="post-subject">${postSubject}</div>
             <div class="post-content-preview">${postContentPreview}</div>

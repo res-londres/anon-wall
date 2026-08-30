@@ -29,3 +29,32 @@ export function showScreen(screenName) {
     };
     document.getElementById(`${screenName}-container`).style.display = displayMap[screenName];
 }
+
+export function formatTime(isoString) {
+    const now = new Date();
+    const then = new Date(isoString);
+    const diffMs = now - then;
+    
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+    const diffWeek = Math.floor(diffDay / 7);
+    const diffMonth = Math.floor(diffDay / 30);
+    const diffYear = Math.floor(diffDay / 365);
+    
+    if (diffSec < 60) return 'Just now';
+    if (diffMin < 60) return `${diffMin}m`;
+    if (diffHour < 24) return `${diffHour}h`;
+    if (diffDay < 7) return `${diffDay}d`;
+    if (diffWeek < 4) return `${diffWeek}w`;
+    if (diffMonth < 12) return `${diffMonth}mo`;
+    if (diffYear < 2) return `${diffYear}y`;
+    
+    // fallback: show actual date
+    return then.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric',
+        year: 'numeric'
+    });
+}
