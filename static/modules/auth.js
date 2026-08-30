@@ -1,18 +1,18 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
+import { posts, setPosts } from './postsData.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- auth ----------- //
 export function checkSession() {
-    fetch('/check_session')
+    return fetch('/check_session')
         .then(response => response.json())
         .then(data => {
             if (data.active) {
-                // restore data
-                userProfile.user_data = data.user.user_data;
-                userProfile.user_id = data.user.user_id;
-                userProfile.username = data.user.username;
+                console.log(data.posts);
+                restoreUserData(data.user);
+                setPosts(data.posts);
                 // auto sign up success
                 console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
                 miscHelp.showScreen('main');
@@ -35,6 +35,13 @@ export function signUp() {
     signUpButton.disabled = true;
     signUpButton.textContent = 'Signing up..';
     socket.emit('sign-up', {username: username});
+}
+
+// ---------- helper ----------- //
+function restoreUserData(userData) {
+    userProfile.user_data = userData.user_data;
+    userProfile.user_id = userData.user_id;
+    userProfile.username = userData.username;
 }
 
 // ---------- socket-listeners ---------- //

@@ -21,21 +21,23 @@ def home():
 def check_session():
     '''HTTP endpoint to check if user has a session'''
     print(f'[HTTP] checking cookie..')
+    session_data = {'active': False}
     user_id = cookie.get_user_cookie()
     if user_id:
         user = db.Users.get_user_by_id(user_id)
         if user:
             print(f'[HTTP] cookie found: {user_id}') 
-            return jsonify({
-                'active': True,
-                'user': {
-                    'user_data': user,
-                    'user_id': user['user_id'],
-                    'username': user['username'],
-                }
-            })
-    print(f'[HTTP] no active session')
-    return jsonify({'active': False})
+            session_data['active'] = True
+            session_data['user'] = {
+                'user_data': user,
+                'user_id': user['user_id'],
+                'username': user['username'],
+            }
+    else: print(f'[HTTP] no active session')
+    recent_posts = db.Posts.get_posts()
+    print(f'[HTTP] recent posts: {recent_posts}')
+    session_data['posts'] = recent_posts
+    return jsonify(session_data)
 
 # ---------- sign-up ----------- #
 @socketio.on('sign-up')

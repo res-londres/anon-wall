@@ -7,9 +7,9 @@ import * as cookieHelp from './modules/helpers/cookie.js';
 import * as miscHelp from './modules/helpers/misc.js';
 
 // ----------init---------- //
-function init() {
+async function init() {
     // auth
-    auth.checkSession();
+    await auth.checkSession();
 
     // setup event listeners
     nav.setupNavigation();

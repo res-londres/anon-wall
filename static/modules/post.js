@@ -1,12 +1,10 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
+import { posts, currentPostIndex } from './postsData.js';
 import { escapeHTML, formatTime } from './helpers/misc.js';
 
 // ----------- posts ----------- //
-export let posts = [];
-export let currentPostIndex = null; 
-
 export function createPost() {
     const user_id = userProfile.user_id;
     const username = userProfile.username;
@@ -26,6 +24,7 @@ export function createPost() {
 }
 
 export function renderPosts() {
+    console.log(`RENDER POSTS: ${posts}`);
     const wall = document.getElementById('wall');
     
     if (posts.length === 0) {
