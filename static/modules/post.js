@@ -3,100 +3,6 @@ import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
 import { escapeHTML, formatTime } from './helpers/misc.js';
 
-// ----------- event-handlers ----------- //
-// post creator
-document.getElementById('post-creator').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        
-        event.stopPropagation();
-        if (action === 'createPost') {
-            createPost();
-        }
-    }
-});
-// posts
-document.getElementById('wall').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
-        
-        event.stopPropagation();
-        if (action === 'doNothing') {
-        } else if (action === 'likePost') {
-            toggleLike(postIndex);
-        } else if (action === 'openPostModal') {
-            openPostModal(postIndex);
-        }
-    }
-});
-// post modal
-document.getElementById('post-modal').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
-        const commentIndex = actionElement.hasAttribute('data-commentindex') ? parseInt(actionElement.dataset.commentindex) : null;
-        
-        event.stopPropagation();
-        if (action === 'closePostModal') {
-            closePostModal();
-        } else if (action === 'likePost') {
-            toggleLikeModal(postIndex);
-        } else if (action === 'likeComment') {
-            toggleCommentLike(postIndex, commentIndex);
-        } else if (action === 'submitComment') {
-            submitCommentModal(postIndex);
-        }
-    }
-});
-// input
-document.getElementById('post-creator').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' && event.shiftKey) {
-        return; 
-    }
-    if (event.key !== 'Enter') return;
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-
-        event.stopPropagation();
-        event.preventDefault();
-        if (action === 'enterSubject') {
-            const contentInput = document.getElementById('post-content-input');
-            contentInput.focus();
-            if (contentInput.value.length > 0) {
-                const end = contentInput.value.length;
-                contentInput.setSelectionRange(end, end);
-            } else {
-                contentInput.setSelectionRange(0, 0);
-            }
-        } else if (action === 'enterContent') {
-            createPost();
-        }
-    }
-});
-
-document.getElementById('post-modal').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' && event.shiftKey) {
-        return; 
-    }
-    if (event.key !== 'Enter') return;
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
-
-        event.stopPropagation();
-        event.preventDefault();
-        if (action === 'enterComment') {
-            submitCommentModal(postIndex);
-        }
-    }
-});
-
 // ----------- posts ----------- //
 export let posts = [];
 export let currentPostIndex = null; 
@@ -113,20 +19,10 @@ export function createPost() {
         attribution: username, // TODO: should be alt name!
         subject: subject || '[NO SUBJECT]',
         content: content,
-        likes: 0,
-        liked: false, // TODO: connect liked to its liker
-        created_at: new Date().toISOString(),
-        comments: []
     };
-    posts.push(newPost);
-
     postSubject.value = '';
     postContent.value = '';
-    renderPosts();
-    document.querySelector('.content').scrollTop = 0;
-    socket.emit('create-post-success', {
-        post: newPost
-    })
+    socket.emit('create-post', {post: newPost});
 }
 
 export function renderPosts() {
@@ -347,3 +243,104 @@ export function toggleCommentLike(postIndex, commentIndex) {
     renderPosts();
 }
 
+// ---------- socket-listeners ---------- //
+socket.on('create-post-success', function(data) {
+    const post = data.post_data;
+    posts.push(post);
+    renderPosts();
+    document.querySelector('.content').scrollTop = 0;
+});
+
+// ----------- event-handlers ----------- //
+// post creator
+document.getElementById('post-creator').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        
+        event.stopPropagation();
+        if (action === 'createPost') {
+            createPost();
+        }
+    }
+});
+// posts
+document.getElementById('wall').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+        
+        event.stopPropagation();
+        if (action === 'doNothing') {
+        } else if (action === 'likePost') {
+            toggleLike(postIndex);
+        } else if (action === 'openPostModal') {
+            openPostModal(postIndex);
+        }
+    }
+});
+// post modal
+document.getElementById('post-modal').addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+        const commentIndex = actionElement.hasAttribute('data-commentindex') ? parseInt(actionElement.dataset.commentindex) : null;
+        
+        event.stopPropagation();
+        if (action === 'closePostModal') {
+            closePostModal();
+        } else if (action === 'likePost') {
+            toggleLikeModal(postIndex);
+        } else if (action === 'likeComment') {
+            toggleCommentLike(postIndex, commentIndex);
+        } else if (action === 'submitComment') {
+            submitCommentModal(postIndex);
+        }
+    }
+});
+// input
+document.getElementById('post-creator').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        return; 
+    }
+    if (event.key !== 'Enter') return;
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+
+        event.stopPropagation();
+        event.preventDefault();
+        if (action === 'enterSubject') {
+            const contentInput = document.getElementById('post-content-input');
+            contentInput.focus();
+            if (contentInput.value.length > 0) {
+                const end = contentInput.value.length;
+                contentInput.setSelectionRange(end, end);
+            } else {
+                contentInput.setSelectionRange(0, 0);
+            }
+        } else if (action === 'enterContent') {
+            createPost();
+        }
+    }
+});
+
+document.getElementById('post-modal').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && event.shiftKey) {
+        return; 
+    }
+    if (event.key !== 'Enter') return;
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        const postIndex = actionElement.hasAttribute('data-postindex') ? parseInt(actionElement.dataset.postindex) : null;
+
+        event.stopPropagation();
+        event.preventDefault();
+        if (action === 'enterComment') {
+            submitCommentModal(postIndex);
+        }
+    }
+});

@@ -179,7 +179,7 @@ class Posts:
         conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
         cur.execute('''
             INSERT INTO posts (user_id, attribution, subject, content)
-            VALUES (%s, %s, %s)
+            VALUES (%s, %s, %s, %s)
             RETURNING *
         ''', (user_id, attribution, subject, content))
         post = cur.fetchone()
