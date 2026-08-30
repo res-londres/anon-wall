@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, currentPostIndex } from './postsData.js';
+import { posts, currentPostIndex, setCurrentPostIndex } from './postsData.js';
 import { escapeHTML, formatTime } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -79,7 +79,7 @@ export function createPostHTML(post, postIndex) {
 
 // ---------- post-modal---------- //
 export function openPostModal(postIndex) {
-    currentPostIndex = postIndex;
+    setCurrentPostIndex(postIndex);
     const post = posts[postIndex];
     if (!post) return;
     
@@ -93,7 +93,7 @@ export function openPostModal(postIndex) {
 export function closePostModal() {
     document.getElementById('post-modal').style.display = 'none';
     document.body.style.overflow = '';
-    currentPostIndex = null;
+    setCurrentPostIndex(null);
 }
 
 export function createCommentsHTML(comments, postIndex) {
