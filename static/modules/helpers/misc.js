@@ -32,7 +32,7 @@ export function showScreen(screenName) {
 
 export function formatTime(isoString) {
     const now = new Date();
-    const then = new Date(isoString);
+    const then = new Date(isoString + 'Z');
     const diffMs = now - then;
     
     const diffSec = Math.floor(diffMs / 1000);

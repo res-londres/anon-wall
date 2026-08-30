@@ -54,13 +54,13 @@ export function createPostHTML(post, postIndex) {
     const postAttribution = escapeHTML(post.attribution);
     const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
     const postSubject = escapeHTML(post.subject);
-    const postCreatedAt = formatTime(post.created_at);
+    const postTime = formatTime(post.created_at);
     
     return `
         <div class="post-card" data-action="openPostModal" data-postindex="${postIndex}">
             <div class="post-header">
                 <span class="post-attribution">${postAttribution}</span>
-                <span class="post-time">${postCreatedAt}</span>
+                <span class="post-time">${postTime}</span>
             </div>
             <div class="post-subject">${postSubject}</div>
             <div class="post-content-preview">${postContentPreview}</div>
