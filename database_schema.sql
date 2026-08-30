@@ -25,6 +25,7 @@ CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
     user_id TEXT NOT NULL REFERENCES users(user_id),
     attribution TEXT NOT NULL,
+    subject TEXT DEFAULT '[NO SUBJECT]',
     content TEXT NOT NULL,
     likes INTEGER DEFAULT 0,
     is_deleted BOOLEAN DEFAULT FALSE,
