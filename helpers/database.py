@@ -175,13 +175,13 @@ class AltNames:
 # ---------- POSTS ---------- #
 class Posts:
     @staticmethod 
-    def create_post(user_id, attribution, content):
+    def create_post(user_id, attribution, subject, content):
         conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
         cur.execute('''
-            INSERT INTO posts (user_id, attribution, content)
+            INSERT INTO posts (user_id, attribution, subject, content)
             VALUES (%s, %s, %s)
             RETURNING *
-        ''', (user_id, attribution, content))
+        ''', (user_id, attribution, subject, content))
         post = cur.fetchone()
         DBHelp.close_conn_cur(conn, cur, commit=True)
         convert_datetime_to_isoformat(post, ('created_at', 'deleted_at'))
