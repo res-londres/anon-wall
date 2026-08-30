@@ -245,7 +245,7 @@ export function toggleCommentLike(postIndex, commentIndex) {
 // ---------- socket-listeners ---------- //
 socket.on('create-post-success', function(data) {
     const post = data.post_data;
-    posts.push(post);
+    posts.unshift(post);
     renderPosts();
     document.querySelector('.content').scrollTop = 0;
 });
