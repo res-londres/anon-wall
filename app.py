@@ -23,8 +23,17 @@ def check_session():
     print(f'[HTTP] checking cookie..')
     user_id = cookie.get_user_cookie()
     if user_id:
-        print(f'[HTTP] cookie found: {user_id}')
-        return jsonify({'active': True})
+        user = db.Users.get_user_by_id(user_id)
+        if user:
+            print(f'[HTTP] cookie found: {user_id}') 
+            return jsonify({
+                'active': True,
+                'user': {
+                    'user_data': user,
+                    'user_id': user['user_id'],
+                    'username': user['username'],
+                }
+            })
     print(f'[HTTP] no active session')
     return jsonify({'active': False})
 

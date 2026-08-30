@@ -19,17 +19,8 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // temporary -- switch to event listeners for buttons //
-window.auth = auth;
-window.post = post;
 window.cookieHelp = cookieHelp;
 
-// ---------- socket-listeners ---------- //
-socket.on('sign-up-success', function(data) {
-    if (data.set_cookie) {
-        cookieHelp.setCookie('user_id', data.user_id, 365);
-    }
-    miscHelp.showScreen('main');
-    miscHelp.resetSignUpState();
-})
+
 
 

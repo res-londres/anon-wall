@@ -1,5 +1,6 @@
 
 import { socket } from './socket.js';
+import { userProfile } from './userProfile.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- event-listeners ----------- //
@@ -38,8 +39,12 @@ export function checkSession() {
         .then(response => response.json())
         .then(data => {
             if (data.active) {
+                // restore data
+                userProfile.user_data = data.user.user_data;
+                userProfile.user_id = data.user.user_id;
+                userProfile.username = data.user.username;
                 // auto sign up success
-                console.log('[CHECK-SESSION] active session found; loggin in..');
+                console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
                 miscHelp.showScreen('main');
             } else {
                 console.log('[CHECK-SESSION] active session not found; continuing to sign up..');
@@ -61,3 +66,16 @@ export function signUp() {
     signUpButton.textContent = 'Signing up..';
     socket.emit('sign-up', {username: username});
 }
+
+// ---------- socket-listeners ---------- //
+socket.on('sign-up-success', function(data) {
+    if (data.set_cookie) {
+        cookieHelp.setCookie('user_id', data.user_id, 365);
+    }
+    miscHelp.showScreen('main');
+    miscHelp.resetSignUpState();
+    userProfile['user_data'] = data.user_data;
+    userProfile['user_id'] = data.user_id;
+    userProfile['username'] = data.username;
+    console.log(userProfile);
+})
