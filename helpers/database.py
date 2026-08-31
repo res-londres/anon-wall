@@ -311,3 +311,54 @@ class Comments:
             WHERE comment_id = %s AND is_deleted = FALSE
         ''', (comment_id,))
         DBHelp.close_conn_cur(conn, cur, commit=True)
+
+# ---------- POST LIKES ---------- #
+class PostLikes:
+    @staticmethod
+    def toggle_post_like(user_id, post_id):
+        conn, cur = DBHelp.get_conn_cur()
+        cur.execute('''
+            SELECT 1 FROM post_likes 
+            WHERE user_id = %s AND post_id = %s
+        ''', (user_id, post_id))
+        already_liked = cur.fetchone()
+        if already_liked:
+            cur.execute('''
+                DELETE FROM post_likes 
+                WHERE user_id = %s AND post_id = %s
+            ''', (user_id, post_id))
+            liked = False
+        else:
+            cur.execute('''
+                INSERT INTO post_likes (user_id, post_id)
+                VALUES (%s, %s)
+            ''', (user_id, post_id))
+            liked = True
+        DBHelp.close_conn_cur(conn, cur, commit=True)
+        return liked
+
+# ---------- COMMENT LIKES ---------- #
+class CommentLikes:
+    @staticmethod
+    def toggle_comment_like(user_id, comment_id):
+        conn, cur = DBHelp.get_conn_cur()
+        cur.execute('''
+            SELECT 1 FROM comment_likes 
+            WHERE user_id = %s AND comment_id = %s
+        ''', (user_id, comment_id))
+        already_liked = cur.fetchone()
+        if already_liked:
+            cur.execute('''
+                DELETE FROM comment_likes 
+                WHERE user_id = %s AND comment_id = %s
+            ''', (user_id, comment_id))
+            liked = False
+        else:
+            cur.execute('''
+                INSERT INTO comment_likes (user_id, comment_id)
+                VALUES (%s, %s)
+            ''', (user_id, comment_id))
+            liked = True
+        DBHelp.close_conn_cur(conn, cur, commit=True)
+        return liked
+    
