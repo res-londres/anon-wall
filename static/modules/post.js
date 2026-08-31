@@ -23,9 +23,9 @@ export function createPost() {
     socket.emit('create-post', {post: newPost});
 }
 
+// --------- render ------------- //
 export function renderPosts() {
     const wall = document.getElementById('wall');
-    
     if (posts.length === 0) {
         wall.innerHTML = `
             <div class="empty-wall">
@@ -35,7 +35,6 @@ export function renderPosts() {
         `;
         return;
     }
-
     let html = '';
     posts.forEach(function(post) {
         html += createPostHTML(post['post_id']);
@@ -43,14 +42,16 @@ export function renderPosts() {
     wall.innerHTML = html;
 }
 
+export function renderPostModal(postID) {
+    const modalContent = document.getElementById('post-detail-content');
+    modalContent.innerHTML = createPostModalHTML(postID);
+}
+
 // ---------- post-modal---------- //
 export function openPostModal(postID) {
     setCurrentPostID(postID);
     const post = getPostByID(postID);
-    
-    const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(postID);
-    
+    renderPostModal(postID);
     document.getElementById('post-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
 }
@@ -257,10 +258,8 @@ socket.on('submit-comment-success', function(data) {
     comments[postID].unshift(comment);
     const post = getPostByID(postID);
     post.comment_count += 1;
-
-    const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(postID);
     
+    renderPostModal(postID);
     renderPosts();
     
     const modalContentScroll = document.querySelector('.post-modal-content');
@@ -280,8 +279,7 @@ socket.on('toggle-comment-like-success', function(data) {
     const postID = data.post_id;
     const comment = getCommentByID(postID, data.comment_id);
     comment.likes += data.liked ? 1 : -1;
-    const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(postID);
+    renderPostModal(postID);
     renderPosts();
 });
 
