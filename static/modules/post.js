@@ -103,7 +103,8 @@ export function createCommentsHTML(postID) {
 
     let commentsHTML = '';
     if (postComments && commentsCount > 0) {
-        postComments.forEach(function(comment, commentIndex) {
+        postComments.forEach(function(comment) {
+            const commentID = comment['comment_id'];
             const commentAttribution = escapeHTML(comment.attribution);
             const commentContent = escapeHTML(comment.content);
             const commentLikeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
@@ -111,12 +112,12 @@ export function createCommentsHTML(postID) {
             const classCommentLiked = false ? 'liked' : ''; // TODO: replace
 
             commentsHTML += `
-                <div class="modal-comment-item" data-commentindex="${commentIndex}">
+                <div class="modal-comment-item" data-postid="${postID}" data-commentid="${commentID}">
                     <div class="modal-comment-left">
                         <span class="modal-comment-attribution">${commentAttribution}</span>
                         <span class="modal-comment-text">${commentContent}</span>
                     </div>
-                    <button class="modal-comment-like-button ${classCommentLiked}" data-action="likeComment" data-postid="${postID}" data-commentindex="${commentIndex}">
+                    <button class="modal-comment-like-button ${classCommentLiked}" data-action="likeComment" data-postid="${postID}" data-commentid="${commentID}">
                         <i class="${commentLikeIcon}"></i>
                         <span class="modal-comment-like-count">${commentLikesCount}</span>
                     </button>
@@ -219,11 +220,11 @@ export function toggleLike(postID) {
     // }
 }
 
-export function toggleCommentLike(postID, commentIndex) {
+export function toggleCommentLike(postID, commentID) {
     const post = getPostByID(postID);
     
     // replace everything 
-    // const comment = post.comments[commentIndex];
+    // const comment = post.comments[commentID];
     // comment.liked = !comment.liked;
     // comment.likes += comment.liked ? 1 : -1;
     
@@ -297,7 +298,7 @@ document.getElementById('post-modal').addEventListener('click', function(event) 
     if (actionElement) {
         const action = actionElement.dataset.action;
         const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;   
-        const commentIndex = actionElement.hasAttribute('data-commentindex') ? parseInt(actionElement.dataset.commentindex) : null;
+        const commentID = actionElement.hasAttribute('data-commentid') ? parseInt(actionElement.dataset.commentid) : null;
         
         event.stopPropagation();
         if (action === 'closePostModal') {
@@ -305,7 +306,7 @@ document.getElementById('post-modal').addEventListener('click', function(event) 
         } else if (action === 'likePost') {
             toggleLikeModal(postID);
         } else if (action === 'likeComment') {
-            toggleCommentLike(postID, commentIndex);
+            toggleCommentLike(postID, commentID);
         } else if (action === 'submitComment') {
             submitCommentModal(postID);
         }
