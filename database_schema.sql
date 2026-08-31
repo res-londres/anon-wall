@@ -2,6 +2,8 @@ DROP TABLE IF EXISTS comments CASCADE;
 DROP TABLE IF EXISTS posts CASCADE;
 DROP TABLE IF EXISTS alt_names CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS post_likes CASCADE;
+DROP TABLE IF EXISTS comment_likes CASCADE;
 
 CREATE TABLE users (
     user_id TEXT PRIMARY KEY,
@@ -43,6 +45,18 @@ CREATE TABLE comments (
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE post_likes (
+    user_id TEXT REFERENCES users(user_id),
+    post_id INTEGER REFERENCES posts(post_id),
+    PRIMARY KEY (user_id, post_id)
+);
+
+CREATE TABLE comment_likes (
+    user_id TEXT REFERENCES users(user_id),
+    comment_id INTEGER REFERENCES comments(comment_id),
+    PRIMARY KEY (user_id, comment_id)
 );
 
  CREATE INDEX IF NOT EXISTS idx_users_socket_id ON users(socket_id)
