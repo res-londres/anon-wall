@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, setPosts } from './postsData.js';
+import { posts, comments, setPosts, setComments } from './postsData.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- auth ----------- //
@@ -10,9 +10,9 @@ export function checkSession() {
         .then(response => response.json())
         .then(data => {
             if (data.active) {
-                console.log(data.posts);
                 restoreUserData(data.user);
                 setPosts(data.posts);
+                setComments(data.comments);
                 // auto sign up success
                 console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
                 miscHelp.showScreen('main');

@@ -22,6 +22,12 @@ def check_session():
     '''HTTP endpoint to check if user has a session'''
     print(f'[HTTP] checking cookie..')
     session_data = {'active': False}
+    get_user_data(session_data)
+    post_ids = get_posts_data(session_data)
+    get_comments_data(post_ids, session_data)
+    return jsonify(session_data)
+
+def get_user_data(session_data):
     user_id = cookie.get_user_cookie()
     if user_id:
         user = db.Users.get_user_by_id(user_id)
@@ -34,10 +40,23 @@ def check_session():
                 'username': user['username'],
             }
     else: print(f'[HTTP] no active session')
-    recent_posts = db.Posts.get_posts()
-    print(f'[HTTP] recent posts: {recent_posts}')
-    session_data['posts'] = recent_posts
-    return jsonify(session_data)
+
+def get_posts_data(session_data):
+    posts = db.Posts.get_posts()
+    print(f'[HTTP] recent posts: {posts}')
+    session_data['posts'] = posts
+    return [post['post_id'] for post in posts]
+
+def get_comments_data(post_ids, session_data):
+    comments = {}
+    for post_id in post_ids:
+        post_comments = db.Comments.get_comments(post_id)
+        if post_comments:
+            comments[post_id] = post_comments  
+        else:
+            comments[post_id] = []  
+    print(f'[HTTP] comments: {comments}')
+    session_data['comments'] = comments
 
 # ---------- sign-up ----------- #
 @socketio.on('sign-up')
@@ -66,12 +85,21 @@ def handle_sign_up(data):
 @socketio.on('create-post')
 def handle_create_post(data):
     post = data['post']
-    print(f'[HANDLE-CREATE-POST] post data before: {post}')
     post = db.Posts.create_post(post['user_id'], post['attribution'], post['subject'], post['content'])
-    print(f'[HANDLE-CREATE-POST] post data after: {post}')
     emit('create-post-success', {
         'post_data': post,
         'post_id': post['post_id'],
+    })
+
+@socketio.on('submit-comment')
+def handle_submit_comment(data):
+    comment = data['comment']
+    print(f'[HANDLE-SUBMIT-COMMENT] comment BEFORE: {comment}')
+    comment = db.Comments.create_comment(comment['post_id'], comment['user_id'], comment['attribution'], comment['content'])
+    print(f'[HANDLE-SUBMIT-COMMENT] comment AFTER: {comment}')
+    emit('submit-comment-success', {
+        'comment_data': comment,
+        'comment_id': comment['comment_id'],
     })
 
 # ---------- etc ---------- #

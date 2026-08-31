@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, currentPostIndex, setCurrentPostIndex } from './postsData.js';
+import { posts, comments, currentPostIndex, setCurrentPostIndex, getPostByID } from './postsData.js';
 import { escapeHTML, formatTime } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -24,7 +24,6 @@ export function createPost() {
 }
 
 export function renderPosts() {
-    console.log(`RENDER POSTS: ${posts}`);
     const wall = document.getElementById('wall');
     
     if (posts.length === 0) {
@@ -45,11 +44,11 @@ export function renderPosts() {
 }
 
 export function createPostHTML(post, postIndex) {
-    const classLiked = post.liked ? 'liked' : '';
-    const commentsCount = post.comments ? post.comments.length : 0;
+    const classLiked = post.liked ? 'liked' : ''; // TODO: replace
+    const commentsCount = post.comment_count;
     const commentIcon = 'fa-regular fa-comment';
     const likesCount = post.likes;
-    const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    const likeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
     const postAttribution = escapeHTML(post.attribution);
     const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
     const postSubject = escapeHTML(post.subject);
@@ -84,7 +83,7 @@ export function openPostModal(postIndex) {
     if (!post) return;
     
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(post, postIndex);
+    modalContent.innerHTML = createPostModalHTML(postIndex);
     
     document.getElementById('post-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
@@ -96,18 +95,19 @@ export function closePostModal() {
     setCurrentPostIndex(null);
 }
 
-export function createCommentsHTML(comments, postIndex) {
-    const commentsCount = comments ? comments.length : 0;
+export function createCommentsHTML(postIndex) {
+    const post = posts[postIndex];
+    const commentsCount = post.comment_count;
+    const postComments = comments[post.post_id];
 
     let commentsHTML = '';
-    if (comments && commentsCount > 0) {
-        for (let commentIndex = commentsCount - 1; commentIndex >= 0; commentIndex--) {
-            const comment = comments[commentIndex];
+    if (postComments && commentsCount > 0) {
+        postComments.forEach(function(comment, commentIndex) {
             const commentAttribution = escapeHTML(comment.attribution);
             const commentContent = escapeHTML(comment.content);
-            const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+            const commentLikeIcon = comment.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
             const commentLikesCount = comment.likes;
-            const classCommentLiked = comment.liked ? 'liked' : '';
+            const classCommentLiked = comment.liked ? 'liked' : ''; // TODO: replace
 
             commentsHTML += `
                 <div class="modal-comment-item" data-commentindex="${commentIndex}">
@@ -121,7 +121,7 @@ export function createCommentsHTML(comments, postIndex) {
                     </button>
                 </div>
             `;
-        }
+        });
     } else {
         commentsHTML = `
             <div class="empty-modal-comments">No comments yet..</div>
@@ -130,23 +130,24 @@ export function createCommentsHTML(comments, postIndex) {
     return commentsHTML;
 }
 
-export function createPostModalHTML(post, postIndex) {
-    const classLiked = post.liked ? 'liked' : '';
-    const comments = post.comments;
+export function createPostModalHTML(postIndex) {
+    const post = posts[postIndex]; // TODO: this should not exist anymore\
+    const classLiked = ''; // TODO: replace
     const commentIcon = 'fa-regular fa-comment';
-    const commentsCount = post.comments ? post.comments.length : 0;
-    const commentsHTML = createCommentsHTML(comments, postIndex);
-    const likeIcon = post.liked ? 'fa-solid fa-heart' : 'fa-regular fa-heart';
+    const commentsCount = post.comment_count;
+    const commentsHTML = createCommentsHTML(postIndex);
     const likesCount = post.likes;
+    const likeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
     const postAttribution = escapeHTML(post.attribution);
     const postContent = escapeHTML(post.content);
     const postSubject = escapeHTML(post.subject);
+    const postTime = formatTime(post.created_at);
 
     return `
         <div class="modal-post-card">
             <div class="modal-post-header">
                 <span class="modal-post-attribution">${postAttribution}</span>
-                <span class="modal-post-time">${post.time}</span>
+                <span class="modal-post-time">${postTime}</span>
             </div>
             <div class="modal-post-subject">${postSubject}</div>
             <div class="modal-post-content">${postContent}</div>
@@ -183,7 +184,7 @@ export function toggleLikeModal(postIndex) {
         post.likes += post.liked ? 1 : -1;
         
         const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createPostModalHTML(post, postIndex);
+        modalContent.innerHTML = createPostModalHTML(postIndex);
         
         renderPosts();
     }
@@ -195,28 +196,17 @@ export function submitCommentModal(postIndex) {
     if (!comment) return;
     
     const post = posts[postIndex];
-    if (post) {
-        post.comments.push({
-            attribution: 'anon', // Temporary
-            content: comment,
-            likes: 0,
-            liked: false,
-            time: 'Just now..' // Temporary
-        });
+    const newComment = {
+        post_id: post.post_id,
+        user_id: post.user_id,
+        attribution: post.attribution, // Temporary
+        content: comment,
+    };
         
-        commentInput.value = '';
-        
-        const modalContent = document.getElementById('post-detail-content');
-        modalContent.innerHTML = createPostModalHTML(post, postIndex);
-        
-        renderPosts();
-        
-        const modalContentScroll = document.querySelector('.post-modal-content');
-        const modalCommentsSection = document.querySelector('.modal-comments-section');
-        if (modalContentScroll && modalCommentsSection) {
-            modalContentScroll.scrollTop = modalCommentsSection.offsetTop;
-        }
-    }
+    commentInput.value = '';
+    socket.emit('submit-comment', {comment: newComment});
+    
+    
 }
 
 export function toggleLike(postIndex) {
@@ -237,7 +227,7 @@ export function toggleCommentLike(postIndex, commentIndex) {
     comment.likes += comment.liked ? 1 : -1;
     
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(post, postIndex);
+    modalContent.innerHTML = createPostModalHTML(postIndex);
     
     renderPosts();
 }
@@ -248,6 +238,26 @@ socket.on('create-post-success', function(data) {
     posts.unshift(post);
     renderPosts();
     document.querySelector('.content').scrollTop = 0;
+});
+socket.on('submit-comment-success', function(data) {
+    const comment = data.comment_data;
+    const postID = comment['post_id']
+    if (!(postID in comments)) {
+        comments[postID] = [];
+    }
+    comments[postID].unshift(comment);
+
+    const modalContent = document.getElementById('post-detail-content');
+    const postIndex = getPostByID(postID);
+    modalContent.innerHTML = createPostModalHTML(postIndex);
+    
+    renderPosts();
+    
+    const modalContentScroll = document.querySelector('.post-modal-content');
+    const modalCommentsSection = document.querySelector('.modal-comments-section');
+    if (modalContentScroll && modalCommentsSection) {
+        modalContentScroll.scrollTop = modalCommentsSection.offsetTop;
+    }
 });
 
 // ----------- event-handlers ----------- //
