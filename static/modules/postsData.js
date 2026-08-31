@@ -22,5 +22,14 @@ export function getPostByID(postID) {
             return post; 
         }
     }
-    return -1; // not found
+}
+
+export function getCommentByID(postID, commentID) {
+    const postComments = comments[postID]
+    for (let commentIndex = 0; commentIndex < postComments.length; commentIndex++) {
+        const comment = postComments[commentIndex];
+        if (commentID === comment['comment_id']) {
+            return comment;
+        }
+    }
 }

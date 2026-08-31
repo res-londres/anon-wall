@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, getPostByID, setCurrentPostID } from './postsData.js';
+import { posts, comments, getPostByID, setCurrentPostID, getCommentByID } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -105,7 +105,12 @@ export function toggleLike(postID) {
 
 export function toggleCommentLike(postID, commentID) {
     const post = getPostByID(postID);
-    
+    // ADD: renderPosts() here, visual feedback should be instant
+    socket.emit('toggle-comment-like', {
+        user_id: userProfile.user_id,
+        post_id: postID,
+        comment_id: commentID
+    });
     // replace everything 
     // const comment = post.comments[commentID];
     // comment.liked = !comment.liked;
@@ -268,6 +273,15 @@ socket.on('submit-comment-success', function(data) {
 socket.on('toggle-post-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
+    renderPosts();
+});
+
+socket.on('toggle-comment-like-success', function(data) {
+    const postID = data.post_id;
+    const comment = getCommentByID(postID, data.comment_id);
+    comment.likes += data.liked ? 1 : -1;
+    const modalContent = document.getElementById('post-detail-content');
+    modalContent.innerHTML = createPostModalHTML(postID);
     renderPosts();
 });
 
