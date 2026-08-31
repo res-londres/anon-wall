@@ -62,20 +62,6 @@ export function closePostModal() {
 }
 
 // ---------- modal-actions ---------- //
-export function toggleLikeModal(postID) {
-    const post = getPostByID(postID);
-    // replace everything
-    // if (post) {
-    //     post.liked = !post.liked;
-    //     post.likes += post.liked ? 1 : -1;
-        
-    //     const modalContent = document.getElementById('post-detail-content');
-    //     modalContent.innerHTML = createPostModalHTML(postID);
-        
-    //     renderPosts();
-    // }
-}
-
 export function submitCommentModal(postID) {
     const commentInput = document.getElementById('modal-comment-input');
     const comment = commentInput.value.trim();
@@ -93,14 +79,28 @@ export function submitCommentModal(postID) {
     socket.emit('submit-comment', {comment: newComment});
 }
 
-export function toggleLike(postID) {
+export function toggleLikeModal(postID) {
     const post = getPostByID(postID);
     // replace everything
     // if (post) {
     //     post.liked = !post.liked;
     //     post.likes += post.liked ? 1 : -1;
+        
+    //     const modalContent = document.getElementById('post-detail-content');
+    //     modalContent.innerHTML = createPostModalHTML(postID);
+        
     //     renderPosts();
     // }
+}
+
+// ------------- toggle-like --------------- //
+export function toggleLike(postID) {
+    const post = getPostByID(postID);
+    // ADD: renderPosts() here, visual feedback should be instant
+    socket.emit('toggle-post-like', {
+        user_id: userProfile.user_id,
+        post_id: postID
+    });
 }
 
 export function toggleCommentLike(postID, commentID) {
@@ -242,9 +242,10 @@ socket.on('create-post-success', function(data) {
     renderPosts();
     document.querySelector('.content').scrollTop = 0;
 });
+
 socket.on('submit-comment-success', function(data) {
     const comment = data.comment_data;
-    const postID = comment['post_id']
+    const postID = comment['post_id'];
     if (!(postID in comments)) {
         comments[postID] = [];
     }
@@ -262,6 +263,12 @@ socket.on('submit-comment-success', function(data) {
     if (modalContentScroll && modalCommentsSection) {
         modalContentScroll.scrollTop = modalCommentsSection.offsetTop;
     }
+});
+
+socket.on('toggle-post-like-success', function(data) {
+    const post = getPostByID(data.post_id);
+    post.likes += data.liked ? 1 : -1;
+    renderPosts();
 });
 
 // ----------- event-handlers ----------- //
