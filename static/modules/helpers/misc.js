@@ -58,3 +58,22 @@ export function formatTime(isoString) {
         year: 'numeric'
     });
 }
+
+export function sortByDate(items, isDescending = true) {
+    // descending = newest first
+    items.sort((a, b) => {
+        const dateA = new Date(a.created_at);
+        const dateB = new Date(b.created_at);
+        
+        return isDescending ? dateB - dateA : dateA - dateB;
+    });
+    return items;
+}
+
+export function sortByLikes(items, isDescending = true) {
+    // descending = newest first
+    items.sort((a, b) => {
+        return isDescending ? b.likes - a.likes : a.likes - b.likes;
+    });
+    return items;
+}

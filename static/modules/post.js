@@ -2,7 +2,7 @@
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
 import { posts, comments, getPostByID, setCurrentPostID } from './postsData.js';
-import { escapeHTML, formatTime } from './helpers/misc.js';
+import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
 export function createPost() {
@@ -43,6 +43,81 @@ export function renderPosts() {
     wall.innerHTML = html;
 }
 
+// ---------- post-modal---------- //
+export function openPostModal(postID) {
+    setCurrentPostID(postID);
+    const post = getPostByID(postID);
+    
+    const modalContent = document.getElementById('post-detail-content');
+    modalContent.innerHTML = createPostModalHTML(postID);
+    
+    document.getElementById('post-modal').style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
+}
+
+export function closePostModal() {
+    document.getElementById('post-modal').style.display = 'none';
+    document.body.style.overflow = '';
+    setCurrentPostID(null);
+}
+
+// ---------- modal-actions ---------- //
+export function toggleLikeModal(postID) {
+    const post = getPostByID(postID);
+    // replace everything
+    // if (post) {
+    //     post.liked = !post.liked;
+    //     post.likes += post.liked ? 1 : -1;
+        
+    //     const modalContent = document.getElementById('post-detail-content');
+    //     modalContent.innerHTML = createPostModalHTML(postID);
+        
+    //     renderPosts();
+    // }
+}
+
+export function submitCommentModal(postID) {
+    const commentInput = document.getElementById('modal-comment-input');
+    const comment = commentInput.value.trim();
+    if (!comment) return;
+    
+    const post = getPostByID(postID);
+    const newComment = {
+        post_id: post.post_id,
+        user_id: post.user_id,
+        attribution: post.attribution, // Temporary
+        content: comment,
+    };
+        
+    commentInput.value = '';
+    socket.emit('submit-comment', {comment: newComment});
+}
+
+export function toggleLike(postID) {
+    const post = getPostByID(postID);
+    // replace everything
+    // if (post) {
+    //     post.liked = !post.liked;
+    //     post.likes += post.liked ? 1 : -1;
+    //     renderPosts();
+    // }
+}
+
+export function toggleCommentLike(postID, commentID) {
+    const post = getPostByID(postID);
+    
+    // replace everything 
+    // const comment = post.comments[commentID];
+    // comment.liked = !comment.liked;
+    // comment.likes += comment.liked ? 1 : -1;
+    
+    // const modalContent = document.getElementById('post-detail-content');
+    // modalContent.innerHTML = createPostModalHTML(postID);
+    
+    // renderPosts();
+}
+
+// ---------- html-creators ------------- //
 export function createPostHTML(postID) {
     const post = getPostByID(postID);
 
@@ -78,28 +153,10 @@ export function createPostHTML(postID) {
     `;
 }
 
-// ---------- post-modal---------- //
-export function openPostModal(postID) {
-    setCurrentPostID(postID);
-    const post = getPostByID(postID);
-    
-    const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(postID);
-    
-    document.getElementById('post-modal').style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
-}
-
-export function closePostModal() {
-    document.getElementById('post-modal').style.display = 'none';
-    document.body.style.overflow = '';
-    setCurrentPostID(null);
-}
-
 export function createCommentsHTML(postID) {
     const post = getPostByID(postID);
     const commentsCount = post.comment_count ? post.comment_count : 0; 
-    const postComments = comments[post.post_id];
+    const postComments = sortByLikes(comments[post.post_id]);
 
     let commentsHTML = '';
     if (postComments && commentsCount > 0) {
@@ -176,62 +233,6 @@ export function createPostModalHTML(postID) {
             </div>
         </div>
     `;
-}
-
-// ---------- modal-actions ---------- //
-export function toggleLikeModal(postID) {
-    const post = getPostByID(postID);
-    // replace everything
-    // if (post) {
-    //     post.liked = !post.liked;
-    //     post.likes += post.liked ? 1 : -1;
-        
-    //     const modalContent = document.getElementById('post-detail-content');
-    //     modalContent.innerHTML = createPostModalHTML(postID);
-        
-    //     renderPosts();
-    // }
-}
-
-export function submitCommentModal(postID) {
-    const commentInput = document.getElementById('modal-comment-input');
-    const comment = commentInput.value.trim();
-    if (!comment) return;
-    
-    const post = getPostByID(postID);
-    const newComment = {
-        post_id: post.post_id,
-        user_id: post.user_id,
-        attribution: post.attribution, // Temporary
-        content: comment,
-    };
-        
-    commentInput.value = '';
-    socket.emit('submit-comment', {comment: newComment});
-}
-
-export function toggleLike(postID) {
-    const post = getPostByID(postID);
-    // replace everything
-    // if (post) {
-    //     post.liked = !post.liked;
-    //     post.likes += post.liked ? 1 : -1;
-    //     renderPosts();
-    // }
-}
-
-export function toggleCommentLike(postID, commentID) {
-    const post = getPostByID(postID);
-    
-    // replace everything 
-    // const comment = post.comments[commentID];
-    // comment.liked = !comment.liked;
-    // comment.likes += comment.liked ? 1 : -1;
-    
-    // const modalContent = document.getElementById('post-detail-content');
-    // modalContent.innerHTML = createPostModalHTML(postID);
-    
-    // renderPosts();
 }
 
 // ---------- socket-listeners ---------- //

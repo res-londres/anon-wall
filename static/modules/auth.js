@@ -13,6 +13,7 @@ export function checkSession() {
                 restoreUserData(data.user);
                 setPosts(data.posts);
                 setComments(data.comments);
+                miscHelp.sortByDate(posts);
                 // auto sign up success
                 console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
                 miscHelp.showScreen('main');
