@@ -384,6 +384,9 @@
 .post-action-button:hover {
     transform: scale(1.1);
 }
+.post-action-button:active {
+    transform: scale(0.9);
+}
 .post-action-button.liked {
     color: #3cc47c;
 }
