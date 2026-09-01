@@ -42,18 +42,23 @@ export function renderPosts() {
     wall.innerHTML = html;
 }
 
-export function renderPostModal(postID) {
+export function renderPostModal(postID, fetchingComments = false) {
     const modalContent = document.getElementById('post-detail-content');
-    modalContent.innerHTML = createPostModalHTML(postID);
+    modalContent.innerHTML = createPostModalHTML(postID, fetchingComments);
 }
 
 // ---------- post-modal---------- //
 export function openPostModal(postID) {
     setCurrentPostID(postID);
     const post = getPostByID(postID);
-    renderPostModal(postID);
+    renderPostModal(postID, true);
     document.getElementById('post-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
+    // for fetching comments for this post
+    socket.emit('open-post-modal', {
+        user_id: userProfile.user_id,
+        post_id: postID
+    });
 }
 
 export function closePostModal() {
@@ -144,8 +149,7 @@ export function createPostHTML(postID) {
     `;
 }
 
-export function createCommentsHTML(postID) {
-    const post = getPostByID(postID);
+export function createCommentsHTML(post, postID) {
     const commentsCount = post.comment_count ? post.comment_count : 0; 
     const postComments = sortByLikes(comments[post.post_id]);
 
@@ -180,12 +184,21 @@ export function createCommentsHTML(postID) {
     return commentsHTML;
 }
 
-export function createPostModalHTML(postID) {
+export function createLoadingCommentsHTML() {
+    return `
+        <div class="loading-modal-comments">
+            <div class="loading-spinner"></div>
+            <span>Loading comments...</span>
+        </div>
+    `;
+}
+
+export function createPostModalHTML(postID, fetchingComments = false) {
     const post = getPostByID(postID);
     const classLiked = ''; // TODO: replace
     const commentIcon = 'fa-regular fa-comment';
     const commentsCount = post.comment_count;
-    const commentsHTML = createCommentsHTML(postID);
+    const commentsHTML = fetchingComments ? createLoadingCommentsHTML() : createCommentsHTML(post, postID);
     const likesCount = post.likes;
     const likeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
     const postAttribution = escapeHTML(post.attribution);
@@ -273,6 +286,13 @@ socket.on('toggle-post-modal-like-success', function(data) {
     post.likes += data.liked ? 1 : -1;
     renderPostModal(data.post_id);
     renderPosts();
+});
+
+socket.on('open-post-modal-success', function(data) {
+    const postID = data.post_id;
+    const postComments = data.comments;
+    comments[postID] = postComments;
+    renderPostModal(postID);
 });
 
 // ----------- event-handlers ----------- //

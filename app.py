@@ -24,7 +24,7 @@ def check_session():
     session_data = {'active': False}
     get_user_data(session_data)
     post_ids = get_posts_data(session_data)
-    get_comments_data(post_ids, session_data)
+    # get_comments_data(post_ids, session_data)
     return jsonify(session_data)
 
 def get_user_data(session_data):
@@ -47,16 +47,16 @@ def get_posts_data(session_data):
     session_data['posts'] = posts
     return [post['post_id'] for post in posts]
 
-def get_comments_data(post_ids, session_data):
-    comments = {}
-    for post_id in post_ids:
-        post_comments = db.Comments.get_comments(post_id)
-        if post_comments:
-            comments[post_id] = post_comments  
-        else:
-            comments[post_id] = []  
-    print(f'[HTTP] comments: {comments}')
-    session_data['comments'] = comments
+# def get_comments_data(post_ids, session_data):
+#     comments = {}
+#     for post_id in post_ids:
+#         post_comments = db.Comments.get_comments(post_id)
+#         if post_comments:
+#             comments[post_id] = post_comments  
+#         else:
+#             comments[post_id] = []  
+#     print(f'[HTTP] comments: {comments}')
+#     session_data['comments'] = comments
 
 # ---------- sign-up ----------- #
 @socketio.on('sign-up')
@@ -134,6 +134,18 @@ def handle_toggle_post_modal_like(data):
         'post_id': post_id,
         'liked': liked,
     })
+
+# ---------- post modal ---------- #
+@socketio.on('open-post-modal')
+def handle_open_post_modal(data):
+    user_id = data['user_id'] # later can be used to check user liked comments under this post
+    post_id = data['post_id']
+    comments = db.Comments.get_comments(post_id)
+    emit('open-post-modal-success', {
+        'post_id': post_id,
+        'comments': comments,
+    })
+
 # ---------- etc ---------- #
 @socketio.on('connect')
 def handle_connect():
