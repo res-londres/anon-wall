@@ -42,8 +42,10 @@ export function renderPosts() {
     wall.innerHTML = html;
 }
 
-export function renderPostModal(postID, fetchingComments = false) {
+export function renderPostModal(postID) {
     const modalContent = document.getElementById('post-detail-content');
+    const post = getPostByID(postID);
+    const fetchingComments = !(postID in comments) && post.comment_count !== 0;
     modalContent.innerHTML = createPostModalHTML(postID, fetchingComments);
 }
 
@@ -51,7 +53,7 @@ export function renderPostModal(postID, fetchingComments = false) {
 export function openPostModal(postID) {
     setCurrentPostID(postID);
     const post = getPostByID(postID);
-    renderPostModal(postID, true);
+    renderPostModal(postID);
     document.getElementById('post-modal').style.display = 'flex';
     document.body.style.overflow = 'hidden'; // prevent scrolling behind modal
     // for fetching comments for this post
@@ -151,7 +153,7 @@ export function createPostHTML(postID) {
 
 export function createCommentsHTML(post, postID) {
     const commentsCount = post.comment_count ? post.comment_count : 0; 
-    const postComments = sortByLikes(comments[post.post_id]);
+    const postComments = commentsCount ? sortByLikes(comments[post.post_id]) : [];
 
     let commentsHTML = '';
     if (postComments && commentsCount > 0) {
