@@ -82,16 +82,10 @@ export function submitCommentModal(postID) {
 
 export function toggleLikeModal(postID) {
     const post = getPostByID(postID);
-    // replace everything
-    // if (post) {
-    //     post.liked = !post.liked;
-    //     post.likes += post.liked ? 1 : -1;
-        
-    //     const modalContent = document.getElementById('post-detail-content');
-    //     modalContent.innerHTML = createPostModalHTML(postID);
-        
-    //     renderPosts();
-    // }
+    socket.emit('toggle-post-modal-like', {
+        user_id: userProfile.user_id,
+        post_id: postID
+    });
 }
 
 // ------------- toggle-like --------------- //
@@ -112,15 +106,6 @@ export function toggleCommentLike(postID, commentID) {
         post_id: postID,
         comment_id: commentID
     });
-    // replace everything 
-    // const comment = post.comments[commentID];
-    // comment.liked = !comment.liked;
-    // comment.likes += comment.liked ? 1 : -1;
-    
-    // const modalContent = document.getElementById('post-detail-content');
-    // modalContent.innerHTML = createPostModalHTML(postID);
-    
-    // renderPosts();
 }
 
 // ---------- html-creators ------------- //
@@ -280,6 +265,13 @@ socket.on('toggle-comment-like-success', function(data) {
     const comment = getCommentByID(postID, data.comment_id);
     comment.likes += data.liked ? 1 : -1;
     renderPostModal(postID);
+    renderPosts();
+});
+
+socket.on('toggle-post-modal-like-success', function(data) {
+    const post = getPostByID(data.post_id);
+    post.likes += data.liked ? 1 : -1;
+    renderPostModal(data.post_id);
     renderPosts();
 });
 

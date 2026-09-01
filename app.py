@@ -125,6 +125,15 @@ def handle_toggle_comment_like(data):
         'liked': liked,
     });
 
+@socketio.on('toggle-post-modal-like')
+def handle_toggle_post_modal_like(data):
+    user_id = data['user_id']
+    post_id = data['post_id']
+    liked = db.PostLikes.toggle_post_like(user_id, post_id)
+    emit('toggle-post-modal-like-success', {
+        'post_id': post_id,
+        'liked': liked,
+    })
 # ---------- etc ---------- #
 @socketio.on('connect')
 def handle_connect():
