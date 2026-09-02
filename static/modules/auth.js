@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, setPosts, setComments, setUserLikes} from './postsData.js';
+import { posts, comments, setPosts, setComments, setUserLikedPosts} from './postsData.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- auth ----------- //
@@ -12,7 +12,7 @@ export function checkSession() {
             if (data.active) {
                 const userData = data.user;
                 restoreUserData(userData);
-                setUserLikes(userData.post_likes);
+                setUserLikedPosts(userData.post_likes);
                 setPosts(data.posts);
                 miscHelp.sortByDate(posts);
                 // auto sign up success

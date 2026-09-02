@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, userLikes, getPostByID, setCurrentPostID, getCommentByID, toggleUserLike } from './postsData.js';
+import { posts, comments, userLikedPosts, getPostByID, setCurrentPostID, getCommentByID, toggleUserLike } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -118,7 +118,7 @@ export function toggleCommentLike(postID, commentID) {
 // ---------- html-creators ------------- //
 export function createPostHTML(postID) {
     const post = getPostByID(postID);
-    const userLiked = postID in userLikes; 
+    const userLiked = postID in userLikedPosts; 
     const classLiked = userLiked ? 'liked' : ''; 
     const commentsCount = post.comment_count ? post.comment_count : 0; 
     const commentIcon = 'fa-regular fa-comment';
@@ -197,7 +197,7 @@ export function createLoadingCommentsHTML() {
 
 export function createPostModalHTML(postID, fetchingComments = false) {
     const post = getPostByID(postID);
-    const userLiked = postID in userLikes;
+    const userLiked = postID in userLikedPosts;
     const classLiked = userLiked ? 'liked' : '';
     const commentIcon = 'fa-regular fa-comment';
     const commentsCount = post.comment_count;
