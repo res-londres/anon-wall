@@ -2,6 +2,7 @@
 export let posts = [];               // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
 export let currentPostID = null;
 export let comments = [];            // {post_id: [{comment_id: .., post_id: .., etc}, {another_comment}], another_post, ..}
+export let userLikes = [];          // [post_id, post_id, ..] 
 
 // -------- setters ---------- //
 export function setPosts(newPosts) {
@@ -12,6 +13,16 @@ export function setCurrentPostID(postID) {
 }
 export function setComments(newComments) {
     comments = newComments;
+}
+export function setUserLikes(likes) {
+    userLikes = likes;
+}
+export function toggleUserLike(postID) {
+    if (postID in userLikes) {
+        delete userLikes[postID];
+    } else {
+        userLikes[postID] = true;
+    }
 }
 
 // ---------- getters ----------- //

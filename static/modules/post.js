@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, getPostByID, setCurrentPostID, getCommentByID } from './postsData.js';
+import { posts, comments, userLikes, getPostByID, setCurrentPostID, getCommentByID, toggleUserLike } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -118,12 +118,12 @@ export function toggleCommentLike(postID, commentID) {
 // ---------- html-creators ------------- //
 export function createPostHTML(postID) {
     const post = getPostByID(postID);
-
-    const classLiked = false ? 'liked' : ''; // TODO: replace
+    const userLiked = postID in userLikes; 
+    const classLiked = userLiked ? 'liked' : ''; 
     const commentsCount = post.comment_count ? post.comment_count : 0; 
     const commentIcon = 'fa-regular fa-comment';
     const likesCount = post.likes;
-    const likeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
+    const likeIcon = userLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
     const postAttribution = escapeHTML(post.attribution);
     const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
     const postSubject = escapeHTML(post.subject);
@@ -197,12 +197,13 @@ export function createLoadingCommentsHTML() {
 
 export function createPostModalHTML(postID, fetchingComments = false) {
     const post = getPostByID(postID);
-    const classLiked = ''; // TODO: replace
+    const userLiked = postID in userLikes;
+    const classLiked = userLiked ? 'liked' : '';
     const commentIcon = 'fa-regular fa-comment';
     const commentsCount = post.comment_count;
     const commentsHTML = fetchingComments ? createLoadingCommentsHTML() : createCommentsHTML(post, postID);
     const likesCount = post.likes;
-    const likeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
+    const likeIcon = userLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
     const postAttribution = escapeHTML(post.attribution);
     const postContent = escapeHTML(post.content);
     const postSubject = escapeHTML(post.subject);
@@ -272,6 +273,7 @@ socket.on('submit-comment-success', function(data) {
 socket.on('toggle-post-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
+    toggleUserLike(data.post_id);
     renderPosts();
 });
 
@@ -286,6 +288,7 @@ socket.on('toggle-comment-like-success', function(data) {
 socket.on('toggle-post-modal-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
+    toggleUserLike(data.post_id);
     renderPostModal(data.post_id);
     renderPosts();
 });

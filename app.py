@@ -24,7 +24,7 @@ def check_session():
     session_data = {'active': False}
     get_user_data(session_data)
     post_ids = get_posts_data(session_data)
-    # get_comments_data(post_ids, session_data)
+    get_user_likes(session_data, post_ids)
     return jsonify(session_data)
 
 def get_user_data(session_data):
@@ -47,16 +47,12 @@ def get_posts_data(session_data):
     session_data['posts'] = posts
     return [post['post_id'] for post in posts]
 
-# def get_comments_data(post_ids, session_data):
-#     comments = {}
-#     for post_id in post_ids:
-#         post_comments = db.Comments.get_comments(post_id)
-#         if post_comments:
-#             comments[post_id] = post_comments  
-#         else:
-#             comments[post_id] = []  
-#     print(f'[HTTP] comments: {comments}')
-#     session_data['comments'] = comments
+def get_user_likes(session_data, post_ids):
+    user_id = cookie.get_user_cookie()
+    if user_id:
+        post_likes = db.PostLikes.get_user_liked_posts(user_id, post_ids)
+        session_data['user']['post_likes'] = post_likes
+        print(f'[HTTP] user likes: {post_likes}')
 
 # ---------- sign-up ----------- #
 @socketio.on('sign-up')
