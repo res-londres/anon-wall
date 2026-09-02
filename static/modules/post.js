@@ -89,6 +89,18 @@ export function submitCommentModal(postID) {
 
 export function toggleLikeModal(postID) {
     const post = getPostByID(postID);
+    // optmitic feedback
+    const isCurrentlyLiked = postID in userLikedPosts;
+    const newLikedState = !isCurrentlyLiked;
+    if (newLikedState) {
+        userLikedPosts[postID] = true;
+        post.likes += 1;
+    } else {
+        delete userLikedPosts[postID];
+        post.likes -= 1;
+    }
+    renderPostModal(postID);
+    renderPosts();
     socket.emit('toggle-post-modal-like', {
         user_id: userProfile.user_id,
         post_id: postID
@@ -98,7 +110,17 @@ export function toggleLikeModal(postID) {
 // ------------- toggle-like --------------- //
 export function toggleLike(postID) {
     const post = getPostByID(postID);
-    // ADD: renderPosts() here, visual feedback should be instant
+    // optimistic feeedback
+    const isCurrentlyLiked = postID in userLikedPosts;
+    const newLikedState = !isCurrentlyLiked;
+    if (newLikedState) {
+        userLikedPosts[postID] = true;
+        post.likes += 1;
+    } else {
+        delete userLikedPosts[postID];
+        post.likes -= 1;
+    }
+    renderPosts();
     socket.emit('toggle-post-like', {
         user_id: userProfile.user_id,
         post_id: postID
@@ -106,8 +128,22 @@ export function toggleLike(postID) {
 }
 
 export function toggleCommentLike(postID, commentID) {
-    const post = getPostByID(postID);
-    // ADD: renderPosts() here, visual feedback should be instant
+    const comment = getCommentByID(postID, commentID);
+    // optmistic feedback
+    const isCurrentlyLiked = (postID in userLikedComments) && (commentID in userLikedComments[postID]);
+    const newLikedState = !isCurrentlyLiked;
+    if (!(postID in userLikedComments)) {
+        userLikedComments[postID] = {};
+    }
+    if (newLikedState) {
+        userLikedComments[postID][commentID] = true;
+        comment.likes += 1;
+    } else {
+        delete userLikedComments[postID][commentID];
+        comment.likes -= 1;
+    }
+    renderPostModal(postID);
+    renderPosts();
     socket.emit('toggle-comment-like', {
         user_id: userProfile.user_id,
         post_id: postID,
@@ -271,6 +307,8 @@ socket.on('submit-comment-success', function(data) {
     }
 });
 
+// obsolete because of optimistic feedback
+/*
 socket.on('toggle-post-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
@@ -295,6 +333,7 @@ socket.on('toggle-post-modal-like-success', function(data) {
     renderPostModal(data.post_id);
     renderPosts();
 });
+*/
 
 // for fetching, caching comments 
 socket.on('open-post-modal-success', function(data) {
