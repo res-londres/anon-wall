@@ -242,15 +242,6 @@ class Posts:
         ''', (post_id,))
         DBHelp.close_conn_cur(conn, cur, commit=True)
 
-    @staticmethod 
-    def like_post(post_id):
-        conn, cur = DBHelp.get_conn_cur()
-        cur.execute('''
-            UPDATE posts SET likes = likes + 1
-            WHERE post_id = %s AND is_deleted = FALSE
-        ''', (post_id,))
-        DBHelp.close_conn_cur(conn, cur, commit=True)
-
 # ---------- COMMENTS ---------- #
 class Comments:
     @staticmethod 
@@ -303,15 +294,6 @@ class Comments:
         ''', (comment_id,))
         DBHelp.close_conn_cur(conn, cur, commit=True)
 
-    @staticmethod 
-    def like_comment(comment_id):
-        conn, cur = DBHelp.get_conn_cur()
-        cur.execute('''
-            UPDATE comments SET likes = likes + 1
-            WHERE comment_id = %s AND is_deleted = FALSE
-        ''', (comment_id,))
-        DBHelp.close_conn_cur(conn, cur, commit=True)
-
 # ---------- POST LIKES ---------- #
 class PostLikes:
     @staticmethod
@@ -327,12 +309,20 @@ class PostLikes:
                 DELETE FROM post_likes 
                 WHERE user_id = %s AND post_id = %s
             ''', (user_id, post_id))
+            cur.execute('''
+                UPDATE posts SET likes = likes - 1
+                WHERE post_id = %s AND likes > 0
+            ''', (post_id,))
             liked = False
         else:
             cur.execute('''
                 INSERT INTO post_likes (user_id, post_id)
                 VALUES (%s, %s)
             ''', (user_id, post_id))
+            cur.execute('''
+                UPDATE posts SET likes = likes + 1
+                WHERE post_id = %s
+            ''', (post_id,))
             liked = True
         DBHelp.close_conn_cur(conn, cur, commit=True)
         return liked
@@ -364,12 +354,20 @@ class CommentLikes:
                 DELETE FROM comment_likes 
                 WHERE user_id = %s AND comment_id = %s
             ''', (user_id, comment_id))
+            cur.execute('''
+                UPDATE comments SET likes = likes - 1
+                WHERE comment_id = %s AND likes > 0
+            ''', (comment_id,))
             liked = False
         else:
             cur.execute('''
                 INSERT INTO comment_likes (user_id, comment_id)
                 VALUES (%s, %s)
             ''', (user_id, comment_id))
+            cur.execute('''
+                UPDATE comments SET likes = likes + 1
+                WHERE comment_id = %s
+            ''', (comment_id,))
             liked = True
         DBHelp.close_conn_cur(conn, cur, commit=True)
         return liked
