@@ -103,33 +103,19 @@ def handle_submit_comment(data):
 def handle_toggle_post_like(data):
     user_id = data['user_id']
     post_id = data['post_id']
-    liked = db.PostLikes.toggle_post_like(user_id, post_id)
-    emit('toggle-post-like-success', {
-        'post_id': post_id,
-        'liked': liked,
-    })
+    db.PostLikes.toggle_post_like(user_id, post_id)
 
 @socketio.on('toggle-comment-like')
 def handle_toggle_comment_like(data):
     user_id = data['user_id']
-    post_id = data['post_id']
     comment_id = data['comment_id']
-    liked = db.CommentLikes.toggle_comment_like(user_id, comment_id)
-    emit('toggle-comment-like-success', {
-        'post_id': post_id,
-        'comment_id': comment_id,
-        'liked': liked,
-    });
+    db.CommentLikes.toggle_comment_like(user_id, comment_id)
 
 @socketio.on('toggle-post-modal-like')
 def handle_toggle_post_modal_like(data):
     user_id = data['user_id']
     post_id = data['post_id']
-    liked = db.PostLikes.toggle_post_like(user_id, post_id)
-    emit('toggle-post-modal-like-success', {
-        'post_id': post_id,
-        'liked': liked,
-    })
+    db.PostLikes.toggle_post_like(user_id, post_id)
 
 # ---------- post modal ---------- #
 @socketio.on('open-post-modal')

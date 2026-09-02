@@ -146,7 +146,6 @@ export function toggleCommentLike(postID, commentID) {
     renderPosts();
     socket.emit('toggle-comment-like', {
         user_id: userProfile.user_id,
-        post_id: postID,
         comment_id: commentID
     });
 }
@@ -306,34 +305,6 @@ socket.on('submit-comment-success', function(data) {
         modalContentScroll.scrollTop = modalCommentsSection.offsetTop;
     }
 });
-
-// obsolete because of optimistic feedback
-/*
-socket.on('toggle-post-like-success', function(data) {
-    const post = getPostByID(data.post_id);
-    post.likes += data.liked ? 1 : -1;
-    toggleUserPostLike(data.post_id);
-    renderPosts();
-});
-
-socket.on('toggle-comment-like-success', function(data) {
-    const postID = data.post_id;
-    const commentID = data.comment_id;
-    const comment = getCommentByID(postID, commentID);
-    comment.likes += data.liked ? 1 : -1;
-    toggleUserCommentLike(postID, commentID);
-    renderPostModal(postID);
-    renderPosts();
-});
-
-socket.on('toggle-post-modal-like-success', function(data) {
-    const post = getPostByID(data.post_id);
-    post.likes += data.liked ? 1 : -1;
-    toggleUserPostLike(data.post_id);
-    renderPostModal(data.post_id);
-    renderPosts();
-});
-*/
 
 // for fetching, caching comments 
 socket.on('open-post-modal-success', function(data) {
