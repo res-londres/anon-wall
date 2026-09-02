@@ -345,7 +345,7 @@ class PostLikes:
             SELECT post_id FROM post_likes 
             WHERE user_id = %s AND post_id IN ({post_ids_query})
         ''', [user_id] + post_ids)
-        liked_posts = {row[0] for row in cur.fetchall()}
+        liked_posts = {row[0]: True for row in cur.fetchall()}
         DBHelp.close_conn_cur(conn, cur)
         return liked_posts
 
@@ -382,7 +382,7 @@ class CommentLikes:
             SELECT comment_id FROM comment_likes 
             WHERE user_id = %s AND comment_id IN ({comment_ids_query})
         ''', [user_id] + comment_ids)
-        liked_comments = {row[0] for row in cur.fetchall()}
+        liked_comments = {row[0]: True for row in cur.fetchall()}
         DBHelp.close_conn_cur(conn, cur)
         return liked_comments
     
