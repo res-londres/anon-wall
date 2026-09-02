@@ -337,6 +337,18 @@ class PostLikes:
         DBHelp.close_conn_cur(conn, cur, commit=True)
         return liked
 
+    @staticmethod
+    def get_user_liked_posts(user_id, post_ids):
+        conn, cur = DBHelp.get_conn_cur()
+        post_ids_query = ', '.join(['%s'] * len(post_ids))
+        cur.execute(f'''
+            SELECT post_id FROM post_likes 
+            WHERE user_id = %s AND post_id IN ({post_ids_query})
+        ''', [user_id] + post_ids)
+        liked_posts = {row[0] for row in cur.fetchall()}
+        DBHelp.close_conn_cur(conn, cur)
+        return liked_posts
+
 # ---------- COMMENT LIKES ---------- #
 class CommentLikes:
     @staticmethod
@@ -361,4 +373,16 @@ class CommentLikes:
             liked = True
         DBHelp.close_conn_cur(conn, cur, commit=True)
         return liked
+
+    @staticmethod
+    def get_user_liked_comments(user_id, comment_ids):
+        conn, cur = DBHelp.get_conn_cur()
+        comment_ids_query = ', '.join(['%s'] * len(comment_ids))
+        cur.execute(f'''
+            SELECT comment_id FROM comment_likes 
+            WHERE user_id = %s AND comment_id IN ({comment_ids_query})
+        ''', [user_id] + comment_ids)
+        liked_comments = {row[0] for row in cur.fetchall()}
+        DBHelp.close_conn_cur(conn, cur)
+        return liked_comments
     

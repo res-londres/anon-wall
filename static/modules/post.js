@@ -290,6 +290,7 @@ socket.on('toggle-post-modal-like-success', function(data) {
     renderPosts();
 });
 
+// for fetching, caching comments 
 socket.on('open-post-modal-success', function(data) {
     const postID = data.post_id;
     const postComments = data.comments;
