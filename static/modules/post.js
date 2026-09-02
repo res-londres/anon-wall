@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, userLikedPosts, getPostByID, setCurrentPostID, getCommentByID, toggleUserLike } from './postsData.js';
+import { posts, comments, userLikedPosts, userLikedComments, setUserLikedComments, getPostByID, setCurrentPostID, getCommentByID, toggleUserPostLike, toggleUserCommentLike } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -118,12 +118,12 @@ export function toggleCommentLike(postID, commentID) {
 // ---------- html-creators ------------- //
 export function createPostHTML(postID) {
     const post = getPostByID(postID);
-    const userLiked = postID in userLikedPosts; 
-    const classLiked = userLiked ? 'liked' : ''; 
+    const userLikedPost = postID in userLikedPosts; 
+    const classPostLiked = userLikedPost ? 'liked' : ''; 
+    const likeIcon = userLikedPost ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
+    const likesCount = post.likes;
     const commentsCount = post.comment_count ? post.comment_count : 0; 
     const commentIcon = 'fa-regular fa-comment';
-    const likesCount = post.likes;
-    const likeIcon = userLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
     const postAttribution = escapeHTML(post.attribution);
     const postContentPreview = escapeHTML(post.content.length > 500 ? post.content.slice(0, 497) + '...' : post.content);
     const postSubject = escapeHTML(post.subject);
@@ -138,7 +138,7 @@ export function createPostHTML(postID) {
             <div class="post-subject">${postSubject}</div>
             <div class="post-content-preview">${postContentPreview}</div>
             <div class="post-footer" data-action="doNothing">
-                <button class="post-action-button ${classLiked}" data-action="likePost" data-postid="${postID}">
+                <button class="post-action-button ${classPostLiked}" data-action="likePost" data-postid="${postID}">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${likesCount}</span>
                 </button>
@@ -161,9 +161,10 @@ export function createCommentsHTML(post, postID) {
             const commentID = comment['comment_id'];
             const commentAttribution = escapeHTML(comment.attribution);
             const commentContent = escapeHTML(comment.content);
-            const commentLikeIcon = false ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; // TODO: replace
             const commentLikesCount = comment.likes;
-            const classCommentLiked = false ? 'liked' : ''; // TODO: replace
+            const commentLiked = (postID in userLikedComments) && (commentID in userLikedComments[postID]);
+            const commentLikeIcon = commentLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
+            const classCommentLiked = commentLiked ? 'liked' : '';
 
             commentsHTML += `
                 <div class="modal-comment-item" data-postid="${postID}" data-commentid="${commentID}">
@@ -197,13 +198,13 @@ export function createLoadingCommentsHTML() {
 
 export function createPostModalHTML(postID, fetchingComments = false) {
     const post = getPostByID(postID);
-    const userLiked = postID in userLikedPosts;
-    const classLiked = userLiked ? 'liked' : '';
-    const commentIcon = 'fa-regular fa-comment';
-    const commentsCount = post.comment_count;
-    const commentsHTML = fetchingComments ? createLoadingCommentsHTML() : createCommentsHTML(post, postID);
+    const userLikedPost = postID in userLikedPosts;
+    const classPostLiked = userLikedPost ? 'liked' : '';
+    const likeIcon = userLikedPost ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
     const likesCount = post.likes;
-    const likeIcon = userLiked ? 'fa-solid fa-heart' : 'fa-regular fa-heart'; 
+    const commentsCount = post.comment_count;
+    const commentIcon = 'fa-regular fa-comment';
+    const commentsHTML = fetchingComments ? createLoadingCommentsHTML() : createCommentsHTML(post, postID);
     const postAttribution = escapeHTML(post.attribution);
     const postContent = escapeHTML(post.content);
     const postSubject = escapeHTML(post.subject);
@@ -218,7 +219,7 @@ export function createPostModalHTML(postID, fetchingComments = false) {
             <div class="modal-post-subject">${postSubject}</div>
             <div class="modal-post-content">${postContent}</div>
             <div class="modal-post-footer">
-                <button class="post-action-button ${classLiked}" data-action="likePost" data-postid="${postID}">
+                <button class="post-action-button ${classPostLiked}" data-action="likePost" data-postid="${postID}">
                     <span class="like-icon"><i class="${likeIcon}"></i></span>
                     <span class="like-count">${likesCount}</span>
                 </button>
@@ -273,14 +274,16 @@ socket.on('submit-comment-success', function(data) {
 socket.on('toggle-post-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
-    toggleUserLike(data.post_id);
+    toggleUserPostLike(data.post_id);
     renderPosts();
 });
 
 socket.on('toggle-comment-like-success', function(data) {
     const postID = data.post_id;
-    const comment = getCommentByID(postID, data.comment_id);
+    const commentID = data.comment_id;
+    const comment = getCommentByID(postID, commentID);
     comment.likes += data.liked ? 1 : -1;
+    toggleUserCommentLike(postID, commentID);
     renderPostModal(postID);
     renderPosts();
 });
@@ -288,7 +291,7 @@ socket.on('toggle-comment-like-success', function(data) {
 socket.on('toggle-post-modal-like-success', function(data) {
     const post = getPostByID(data.post_id);
     post.likes += data.liked ? 1 : -1;
-    toggleUserLike(data.post_id);
+    toggleUserPostLike(data.post_id);
     renderPostModal(data.post_id);
     renderPosts();
 });
@@ -297,7 +300,9 @@ socket.on('toggle-post-modal-like-success', function(data) {
 socket.on('open-post-modal-success', function(data) {
     const postID = data.post_id;
     const postComments = data.comments;
+    const likedComments = data.liked_comments;
     comments[postID] = postComments;
+    setUserLikedComments(likedComments, postID);
     renderPostModal(postID);
 });
 

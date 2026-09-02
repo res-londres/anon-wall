@@ -24,7 +24,7 @@ def check_session():
     session_data = {'active': False}
     get_user_data(session_data)
     post_ids = get_posts_data(session_data)
-    get_user_likes(session_data, post_ids)
+    get_user_liked_posts(session_data, post_ids)
     return jsonify(session_data)
 
 def get_user_data(session_data):
@@ -47,7 +47,7 @@ def get_posts_data(session_data):
     session_data['posts'] = posts
     return [post['post_id'] for post in posts]
 
-def get_user_likes(session_data, post_ids):
+def get_user_liked_posts(session_data, post_ids):
     user_id = cookie.get_user_cookie()
     if user_id:
         post_likes = db.PostLikes.get_user_liked_posts(user_id, post_ids)
@@ -137,9 +137,11 @@ def handle_open_post_modal(data):
     user_id = data['user_id'] # later can be used to check user liked comments under this post
     post_id = data['post_id']
     comments = db.Comments.get_comments(post_id)
+    liked_comments = db.CommentLikes.get_user_liked_comments_in_post(user_id, post_id, [comment['comment_id'] for comment in comments])
     emit('open-post-modal-success', {
         'post_id': post_id,
         'comments': comments,
+        'liked_comments': liked_comments,
     })
 
 # ---------- etc ---------- #

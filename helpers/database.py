@@ -373,13 +373,17 @@ class CommentLikes:
         return liked
 
     @staticmethod
-    def get_user_liked_comments(user_id, comment_ids):
+    def get_user_liked_comments_in_post(user_id, post_id, comment_ids):
         conn, cur = DBHelp.get_conn_cur()
         comment_ids_query = ', '.join(['%s'] * len(comment_ids))
         cur.execute(f'''
-            SELECT comment_id FROM comment_likes 
-            WHERE user_id = %s AND comment_id IN ({comment_ids_query})
-        ''', [user_id] + comment_ids)
+            SELECT cl.comment_id 
+            FROM comment_likes cl
+            JOIN comments c ON cl.comment_id = c.comment_id
+            WHERE cl.user_id = %s 
+            AND cl.comment_id IN ({comment_ids_query})
+            AND c.post_id = %s
+        ''', [user_id] + comment_ids + [post_id])
         liked_comments = {row[0]: True for row in cur.fetchall()}
         DBHelp.close_conn_cur(conn, cur)
         return liked_comments
