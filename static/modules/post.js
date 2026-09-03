@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, userLikedPosts, userLikedComments, setUserLikedComments, getPostByID, setCurrentPostID, getCommentByID, toggleUserPostLike, toggleUserCommentLike } from './postsData.js';
+import { posts, comments, userLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -409,3 +409,25 @@ document.getElementById('post-modal').addEventListener('keydown', function(event
         }
     }
 });
+
+// ---------- helpers ---------- //
+export function toggleUserPostLike(postID) {
+    if (postID in userLikedPosts) {
+        delete userLikedPosts[postID];
+    } else {
+        userLikedPosts[postID] = true;
+    }
+}
+
+export function toggleUserCommentLike(postID, commentID) {
+    if (postID in userLikedComments) {
+        if (commentID in userLikedComments[postID]) {
+            delete userLikedComments[postID][commentID];
+        } else {
+            userLikedComments[postID][commentID] = true;
+        }
+    } else {
+        userLikedComments[postID] = {};
+        userLikedComments[postID][commentID] = true;
+    }
+}

@@ -18,27 +18,8 @@ export function setComments(newComments) {
 export function setUserLikedPosts(likes) {
     userLikedPosts = likes;
 }
-export function toggleUserPostLike(postID) {
-    if (postID in userLikedPosts) {
-        delete userLikedPosts[postID];
-    } else {
-        userLikedPosts[postID] = true;
-    }
-}
 export function setUserLikedComments(likes, postID) {
     userLikedComments[postID] = likes;
-}
-export function toggleUserCommentLike(postID, commentID) {
-    if (postID in userLikedComments) {
-        if (commentID in userLikedComments[postID]) {
-            delete userLikedComments[postID][commentID];
-        } else {
-            userLikedComments[postID][commentID] = true;
-        }
-    } else {
-        userLikedComments[postID] = {};
-        userLikedComments[postID][commentID] = true;
-    }
 }
 
 // ---------- getters ----------- //
