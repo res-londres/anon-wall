@@ -732,15 +732,17 @@
 }
 
 .private-username {
-    color: #828081;
+    color: #1e392a;
     font-weight: 600;
     letter-spacing: 0.05em;
-    opacity: 1;
-    transition: opacity 0.3s ease;
 }
 
 .private-username.hidden {
+    color: #828081;
+    font-weight: 600;
+    letter-spacing: 0.05em;
     user-select: none;
+    opacity: 1;
 }
 
 .copy-user-id-button {
