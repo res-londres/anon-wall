@@ -695,6 +695,73 @@
     text-align: center;
 }
 
+/* ----------! PROFILE PAGE !---------- */
+.profile-header {
+    align-items: center;
+    background: #ffffff;
+    border: 2px solid #1e392a;
+    border-radius: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1rem;
+}
+
+.profile-username {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+}
+
+.show-private-username-button {
+    background: none;
+    border: none;
+    color: #1e392a;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: all 0.3s;
+}
+
+.show-private-username-button:hover {
+    color: #3cc47c;
+    transform: scale(1.1);
+}
+
+.show-private-username-button:active {
+    transform: scale(0.9);
+}
+
+.private-username {
+    color: #828081;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.private-username.hidden {
+    user-select: none;
+}
+
+.copy-user-id-button {
+    background: none;
+    border: none;
+    color: #1e392a;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: all 0.3s;
+}
+
+.copy-user-id-button:hover {
+    color: #3cc47c;
+    transform: scale(1.1);
+}
+
+.copy-user-id-button:active {
+    transform: scale(0.9);
+}
+
+
 /*
 dark: #1e392a
 light: #3cc47c

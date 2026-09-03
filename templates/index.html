@@ -37,15 +37,12 @@
         </section>
         <section class="left-sidebar">
             <nav>
-                <a href="#" data-page="main-wall" class="active">Main Wall</a>
-                <a href="#" data-page="profile">Profile</a>
-                <a href="#" data-page="canvas">Canvas</a>
+                <a href="#" data-page="main-wall" data-action="fetchGlobalPosts" class="active">Main Wall</a>
+                <a href="#" data-page="profile" data-action="fetchUserPosts">Profile</a>
+                <a href="#" data-page="canvas" data-action="SOON">Canvas</a>
             </nav>
         </section>
         <section class="content">
-            <div id="page-profile" class="page-content" style="display:none;">
-                profile page
-            </div>
             <div id="page-main-wall" class="page-content">
                 <!-- Post Creator -->
                 <div class="post-creator" id="post-creator">
@@ -67,6 +64,23 @@
                 <!-- Wall -->
                 <div id="wall">
                     <!-- posts will be provided by js -->
+                </div>
+            </div>
+            <div id="page-profile" class="page-content" style="display:none;">
+                <div class="profile-header">
+                    <div class="profile-username">
+                        <button class="show-private-username-button" data-action="showPrivateUsername">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                        <span id="private-username" class="private-username hidden">ANONYMOUS</span>
+                    </div>
+                    <button class="copy-user-id-button" data-action="copyUserID">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+
+                <div id="user-wall">
+                    <!-- all user posts -->
                 </div>
             </div>
             <div id="page-canvas" class="page-content" style="display:none;">
