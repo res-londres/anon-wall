@@ -43,7 +43,7 @@
             </nav>
         </section>
         <section class="content">
-            <div id="page-main-wall" class="page-content">
+            <div id="page-main-wall" class="page-content" data-page="mainWall">
                 <!-- Post Creator -->
                 <div class="post-creator" id="post-creator">
                     <div class="post-creator-header">
@@ -63,10 +63,15 @@
 
                 <!-- Wall -->
                 <div id="wall">
+                    <!-- loading -->
+                     <div id="loading-posts"class="loading-posts">
+                        <div class="loading-spinner"></div>
+                        <span>Loading posts...</span>
+                    </div>
                     <!-- posts will be provided by js -->
                 </div>
             </div>
-            <div id="page-profile" class="page-content" style="display:none;">
+            <div id="page-profile" class="page-content" data-page="profile" style="display:none;">
                 <div id="profile-header" class="profile-header">
                     <div class="profile-username">
                         <button id="show-private-username-button" class="show-private-username-button" data-action="showPrivateUsername">
@@ -80,10 +85,15 @@
                 </div>
 
                 <div id="user-wall">
+                    <!-- loading -->
+                     <div id="loading-user-posts" class="loading-posts">
+                        <div class="loading-spinner"></div>
+                        <span>Loading posts...</span>
+                    </div>
                     <!-- all user posts -->
                 </div>
             </div>
-            <div id="page-canvas" class="page-content" style="display:none;">
+            <div id="page-canvas" class="page-content" data-page="canvas" style="display:none;">
                 canvas page
                 <!-- TEST: REMOVE THIS -->
                 <button onclick="cookieHelp.deleteCookie('user_id')">Magic Button</button> 
