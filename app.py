@@ -120,7 +120,7 @@ def handle_toggle_post_modal_like(data):
 # ---------- post modal ---------- #
 @socketio.on('open-post-modal')
 def handle_open_post_modal(data):
-    user_id = data['user_id'] # later can be used to check user liked comments under this post
+    user_id = data['user_id']
     post_id = data['post_id']
     comments = db.Comments.get_comments(post_id)
     liked_comments = db.CommentLikes.get_user_liked_comments_in_post(user_id, post_id, [comment['comment_id'] for comment in comments])
