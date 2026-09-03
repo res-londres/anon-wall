@@ -1,5 +1,6 @@
 
 export let posts = [];               // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
+export let userPosts = [];           // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
 export let currentPostID = null;
 export let comments = [];            // {post_id: [{comment_id: .., post_id: .., etc}, {another_comment}], another_post, ..}
 export let userLikedPosts = {};      // {post_id: true, post_id: true, ..}
@@ -8,6 +9,9 @@ export let userLikedComments = {};   // {post_id: {comment_id: true, comment_id:
 // -------- setters ---------- //
 export function setPosts(newPosts) {
     posts = newPosts;
+}
+export function setUserPosts(newUserPosts) {
+    userPosts = newUserPosts;
 }
 export function setCurrentPostID(postID) {
     currentPostID = postID;

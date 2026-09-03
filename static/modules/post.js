@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, userLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
+import { posts, userPosts, comments, setPosts, setUserPosts, userLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -35,11 +35,31 @@ export function renderPosts() {
         `;
         return;
     }
+    wall.innerHTML = '';
     let html = '';
     posts.forEach(function(post) {
         html += createPostHTML(post['post_id']);
     });
     wall.innerHTML = html;
+}
+
+export function renderUserPosts() {
+    const userWall = document.getElementById('user-wall');
+    if (userPosts.length === 0) {
+        userWall.innerHTML = `
+            <div class="empty-wall">
+                <div class="empty-icon"><i class="fa-solid fa-leaf"></i></div>
+                <p>No posts yet..</p>
+            </div>
+        `;
+        return;
+    }
+    userWall.innerHTML = '';
+    let html = '';
+    userPosts.forEach(function(post) {
+        html += createPostHTML(post['post_id']);
+    });
+    userWall.innerHTML = html;
 }
 
 export function renderPostModal(postID) {
@@ -222,15 +242,6 @@ export function createCommentsHTML(post, postID) {
     return commentsHTML;
 }
 
-export function createLoadingCommentsHTML() {
-    return `
-        <div class="loading-modal-comments">
-            <div class="loading-spinner"></div>
-            <span>Loading comments...</span>
-        </div>
-    `;
-}
-
 export function createPostModalHTML(postID, fetchingComments = false) {
     const post = getPostByID(postID);
     const userLikedPost = postID in userLikedPosts;
@@ -278,6 +289,15 @@ export function createPostModalHTML(postID, fetchingComments = false) {
     `;
 }
 
+export function createLoadingCommentsHTML() {
+    return `
+        <div class="loading-modal-comments">
+            <div class="loading-spinner"></div>
+            <span>Loading comments...</span>
+        </div>
+    `;
+}
+
 // ---------- socket-listeners ---------- //
 socket.on('create-post-success', function(data) {
     const post = data.post_data;
@@ -314,6 +334,19 @@ socket.on('open-post-modal-success', function(data) {
     comments[postID] = postComments;
     setUserLikedComments(likedComments, postID);
     renderPostModal(postID);
+});
+
+// fetching posts
+socket.on('fetch-global-posts-success', function(data) {
+    const newPosts = data.posts;
+    setPosts(newPosts);
+    renderPosts();
+});
+
+socket.on('fetch-user-posts-success', function(data) {
+    const newPosts = data.posts;
+    setUserPosts(newPosts);
+    renderUserPosts();
 });
 
 // ----------- event-handlers ----------- //

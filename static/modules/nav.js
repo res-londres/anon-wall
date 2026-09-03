@@ -1,10 +1,21 @@
 
+import { socket } from './socket.js';
+import { userProfile } from './userProfile.js';
+
 export function setupNavigation() {
     document.querySelectorAll('nav a').forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            var page = this.dataset.page;
+            const page = this.dataset.page;
+            const action = this.dataset.action;
             showPage(page);
+            if (action === 'fetchGlobalPosts') {
+                socket.emit('fetch-global-posts');
+            } else if (action === 'fetchUserPosts') {
+                socket.emit('fetch-user-posts', {
+                    user_id: userProfile.user_id
+                });
+            }
         });
     });
 }
@@ -15,7 +26,7 @@ export function showPage(page) {
         el.style.display = 'none';
     });
     // show target page
-    var target = document.getElementById('page-' + page);
+    const target = document.getElementById('page-' + page);
     if (target) {
         target.style.display = 'block';
     }

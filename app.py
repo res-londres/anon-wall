@@ -130,6 +130,26 @@ def handle_open_post_modal(data):
         'liked_comments': liked_comments,
     })
 
+# ---------- fetch posts ---------- #
+@socketio.on('fetch-global-posts')
+def handle_fetch_global_posts():
+    print('[FETCH-POSTS] fetching..')
+    posts = db.Posts.get_posts()
+    print('[FETCH-POSTS] fetched!')
+    emit('fetch-global-posts-success', {
+        'posts': posts,
+    }) 
+
+@socketio.on('fetch-user-posts')
+def handle_fetch_user_posts(data):
+    user_id = data['user_id']
+    print('[FETCH-USER-POSTS] fetching..')
+    posts = db.Posts.get_posts_by_user(user_id)
+    print('[FETCH-USER-POSTS] fetched!')
+    emit('fetch-user-posts-success', {
+        'posts': posts,
+    })
+
 # ---------- etc ---------- #
 @socketio.on('connect')
 def handle_connect():

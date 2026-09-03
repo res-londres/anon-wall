@@ -210,6 +210,30 @@ class Posts:
             convert_datetime_to_isoformat(post, ('created_at', 'deleted_at'))
         return posts
 
+    @staticmethod
+    def get_posts_by_user(user_id, limit=50, include_deleted=False):
+        conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
+        query = '''
+            SELECT p.*, 
+                COUNT(c.comment_id) as comment_count
+            FROM posts p
+            LEFT JOIN comments c ON p.post_id = c.post_id AND c.is_deleted = FALSE
+            WHERE p.user_id = %s
+        '''
+        if not include_deleted:
+            query += ' AND p.is_deleted = FALSE'
+        query += '''
+            GROUP BY p.post_id
+            ORDER BY p.created_at DESC 
+            LIMIT %s
+        '''
+        cur.execute(query, (user_id, limit))
+        posts = cur.fetchall()
+        DBHelp.close_conn_cur(conn, cur)
+        for post in posts:
+            convert_datetime_to_isoformat(post, ('created_at', 'deleted_at'))
+        return posts
+    
     @staticmethod 
     def get_post_by_id(post_id, include_deleted=False):
         conn, cur = DBHelp.get_conn_cur(cursor=RealDictCursor)
