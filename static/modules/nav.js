@@ -6,9 +6,9 @@ export function setupNavigation() {
     document.querySelectorAll('nav a').forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const page = this.dataset.page;
+            const pageName = this.dataset.page;
             const action = this.dataset.action;
-            showPage(page);
+            showPage(pageName);
             if (action === 'fetchGlobalPosts') {
                 socket.emit('fetch-global-posts');
             } else if (action === 'fetchUserPosts') {
@@ -20,20 +20,21 @@ export function setupNavigation() {
     });
 }
 
-export function showPage(page) {
+export function showPage(pageName) {
     // hide all pages
-    document.querySelectorAll('.page-content').forEach(function(el) {
-        el.style.display = 'none';
+    document.querySelectorAll('.page-content').forEach(function(page) {
+        page.style.display = 'none';
     });
     // show target page
-    const target = document.getElementById('page-' + page);
-    if (target) {
-        target.style.display = 'block';
-    }
+    const targetPage = document.querySelector(`.page-content[data-page="${pageName}"]`);
+    const contentContainer = document.querySelector('.content');
+    targetPage.style.display = 'block';
+    contentContainer.scrollTop = 0;
+    
     // reassign active class to active page
-    document.querySelectorAll('nav a').forEach(function(el) {
-        el.classList.remove('active');
+    document.querySelectorAll('nav a').forEach(function(page) {
+        page.classList.remove('active');
     });
-    document.querySelector('nav a[data-page="' + page + '"]').classList.add('active');
+    document.querySelector(`nav a[data-page="${pageName}"]`).classList.add('active');
 }
 
