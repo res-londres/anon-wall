@@ -5,13 +5,14 @@ import { posts, userPosts, comments, setPosts, setUserPosts, userLikedPosts, use
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
-export function createPost() {
+export function createPost(postCreatorElement) {
     const user_id = userProfile.user_id;
     const username = userProfile.username;
-    const postSubject = document.getElementById('post-subject-input');
-    const postContent = document.getElementById('post-content-input');
+    const postSubject = postCreatorElement.querySelector('.post-subject-input');
+    const postContent = postCreatorElement.querySelector('.post-content-input');
     const subject = postSubject.value.trim();
     const content = postContent.value.trim();
+    if (!content) return;
     const newPost = {
         user_id: user_id,
         attribution: username, // TODO: should be alt name!
@@ -350,56 +351,37 @@ socket.on('fetch-user-posts-success', function(data) {
 });
 
 // ----------- event-handlers ----------- //
-// post creator
-document.getElementById('post-creator').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        
-        event.stopPropagation();
-        if (action === 'createPost') {
-            createPost();
-        }
-    }
-});
-// posts
-document.getElementById('wall').addEventListener('click', function(event) {
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;
-        
-        event.stopPropagation();
-        if (action === 'doNothing') {
-        } else if (action === 'likePost') {
-            toggleLike(postID);
-        } else if (action === 'openPostModal') {
-            openPostModal(postID);
-        }
-    }
-});
-// post modal
-document.getElementById('post-modal').addEventListener('click', function(event) {
+// click events
+document.addEventListener('click', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
         const action = actionElement.dataset.action;
         const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;   
         const commentID = actionElement.hasAttribute('data-commentid') ? parseInt(actionElement.dataset.commentid) : null;
+        const creatorID = actionElement.hasAttribute('data-creatorid') ? actionElement.dataset.creatorid : null;
+        const postCreatorElement = creatorID ? document.querySelector(`.post-creator[data-creatorid="${creatorID}"]`) : null;
         
         event.stopPropagation();
-        if (action === 'closePostModal') {
+        if (action === 'doNothing') {
+            return;
+        } else if (action === 'createPost') {
+            createPost(postCreatorElement);
+        } else if (action === 'openPostModal') {
+            openPostModal(postID);
+        } else if (action === 'closePostModal') {
             closePostModal();
         } else if (action === 'likePost') {
-            toggleLikeModal(postID);
+            toggleLike(postID);
         } else if (action === 'likeComment') {
             toggleCommentLike(postID, commentID);
         } else if (action === 'submitComment') {
             submitCommentModal(postID);
-        }
+        } 
     }
 });
-// input
-document.getElementById('post-creator').addEventListener('keydown', function(event) {
+
+// keydown events
+document.addEventListener('keydown', function(event) {
     if (event.key === 'Enter' && event.shiftKey) {
         return; 
     }
@@ -407,11 +389,14 @@ document.getElementById('post-creator').addEventListener('keydown', function(eve
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
         const action = actionElement.dataset.action;
+        const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;
+        const creatorID = actionElement.hasAttribute('data-creatorid') ? actionElement.dataset.creatorid : null;
+        const postCreatorElement = creatorID ? document.querySelector(`.post-creator[data-creatorid="${creatorID}"]`) : null;
 
         event.stopPropagation();
         event.preventDefault();
         if (action === 'enterSubject') {
-            const contentInput = document.getElementById('post-content-input');
+            const contentInput = postCreatorElement.querySelector('.post-content-input');
             contentInput.focus();
             if (contentInput.value.length > 0) {
                 const end = contentInput.value.length;
@@ -420,24 +405,8 @@ document.getElementById('post-creator').addEventListener('keydown', function(eve
                 contentInput.setSelectionRange(0, 0);
             }
         } else if (action === 'enterContent') {
-            createPost();
-        }
-    }
-});
-
-document.getElementById('post-modal').addEventListener('keydown', function(event) {
-    if (event.key === 'Enter' && event.shiftKey) {
-        return; 
-    }
-    if (event.key !== 'Enter') return;
-    const actionElement = event.target.closest('[data-action]');
-    if (actionElement) {
-        const action = actionElement.dataset.action;
-        const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;
-
-        event.stopPropagation();
-        event.preventDefault();
-        if (action === 'enterComment') {
+            createPost(postCreatorElement);
+        } else if (action === 'enterComment') {
             submitCommentModal(postID);
         }
     }
