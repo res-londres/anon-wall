@@ -45,19 +45,19 @@
         <section class="content">
             <div id="page-main-wall" class="page-content" data-page="mainWall">
                 <!-- Post Creator -->
-                <div class="post-creator" id="post-creator">
+                <div class="post-creator" data-creatorid="main-wall">
                     <div class="post-creator-header">
                         <p class="post-creator-label">Create post</p>
                         <div class="post-creator-controls">
-                            <select id="alt-name-select" class="alt-name-select">
+                            <select class="alt-name-select">
                                 <option value="{new-alt}">+ Create New Alt</option>
                             </select>
-                            <button class="post-button" data-action="createPost">Post</button>
+                            <button class="post-button" data-action="createPost" data-creatorid="main-wall">Post</button>
                         </div>
                     </div>
                     <div class="post-creator-input">
-                        <textarea type="text" id="post-subject-input" class="post-subject-input" data-action="enterSubject" placeholder="Subject" rows="1" maxlength="150"></textarea>
-                        <textarea type="text" id="post-content-input" class="post-content-input" data-action="enterContent" placeholder="Write something.." rows="1" maxlength="2000"></textarea>
+                        <textarea type="text" class="post-subject-input" data-action="enterSubject" data-creatorid="main-wall" placeholder="Subject" rows="1" maxlength="150"></textarea>
+                        <textarea type="text" class="post-content-input" data-action="enterContent" data-creatorid="main-wall" placeholder="Write something.." rows="1" maxlength="2000"></textarea>
                     </div>
                 </div>
 
@@ -72,6 +72,7 @@
                 </div>
             </div>
             <div id="page-profile" class="page-content" data-page="profile" style="display:none;">
+                <!-- Profile Header -->
                 <div id="profile-header" class="profile-header">
                     <div class="profile-username">
                         <button id="show-private-username-button" class="show-private-username-button" data-action="showPrivateUsername">
@@ -82,6 +83,22 @@
                     <button class="copy-user-id-button" data-action="copyUserID">
                         <i class="fa-regular fa-copy"></i>
                     </button>
+                </div>
+                <!-- Post Creator -->
+                <div class="post-creator" data-creatorid="user-wall">
+                    <div class="post-creator-header">
+                        <p class="post-creator-label">Create post</p>
+                        <div class="post-creator-controls">
+                            <select class="alt-name-select">
+                                <option value="{new-alt}">+ Create New Alt</option>
+                            </select>
+                            <button class="post-button" data-action="createPost" data-creatorid="user-wall">Post</button>
+                        </div>
+                    </div>
+                    <div class="post-creator-input">
+                        <textarea type="text" class="post-subject-input" data-action="enterSubject" data-creatorid="user-wall" placeholder="Subject" rows="1" maxlength="150"></textarea>
+                        <textarea type="text" class="post-content-input" data-action="enterContent" data-creatorid="user-wall" placeholder="Write something.." rows="1" maxlength="2000"></textarea>
+                    </div>
                 </div>
 
                 <div id="user-wall">
