@@ -111,12 +111,6 @@ def handle_toggle_comment_like(data):
     comment_id = data['comment_id']
     db.CommentLikes.toggle_comment_like(user_id, comment_id)
 
-@socketio.on('toggle-post-modal-like')
-def handle_toggle_post_modal_like(data):
-    user_id = data['user_id']
-    post_id = data['post_id']
-    db.PostLikes.toggle_post_like(user_id, post_id)
-
 # ---------- post modal ---------- #
 @socketio.on('open-post-modal')
 def handle_open_post_modal(data):

@@ -108,26 +108,6 @@ export function submitCommentModal(postID) {
     socket.emit('submit-comment', {comment: newComment});
 }
 
-export function toggleLikeModal(postID) {
-    const post = getPostByID(postID);
-    // optmitic feedback
-    const isCurrentlyLiked = postID in userLikedPosts;
-    const newLikedState = !isCurrentlyLiked;
-    if (newLikedState) {
-        userLikedPosts[postID] = true;
-        post.likes += 1;
-    } else {
-        delete userLikedPosts[postID];
-        post.likes -= 1;
-    }
-    renderPostModal(postID);
-    renderPosts();
-    socket.emit('toggle-post-modal-like', {
-        user_id: userProfile.user_id,
-        post_id: postID
-    });
-}
-
 // ------------- toggle-like --------------- //
 export function toggleLike(postID) {
     const post = getPostByID(postID);
