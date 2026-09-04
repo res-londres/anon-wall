@@ -73,16 +73,19 @@
             </div>
             <div id="page-profile" class="page-content" data-page="profile" style="display:none;">
                 <!-- Profile Header -->
-                <div id="profile-header" class="profile-header">
-                    <div class="profile-username">
-                        <button id="show-private-username-button" class="show-private-username-button" data-action="showPrivateUsername">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <p class="profile-label">Your Profile</p>
+                        <p id="private-username" class="private-username hidden">[HIDDEN USERNAME]</p>
+                    </div>
+                    <div id="profile-actions" class="profile-actions">
+                        <button id="show-private-username-button" class="profile-action-button" data-action="showPrivateUsername">
                             <i class="fa-regular fa-eye"></i>
                         </button>
-                        <span id="private-username" class="private-username hidden">[HIDDEN USERNAME]</span>
+                        <button class="profile-action-button" data-action="copyUserID">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
                     </div>
-                    <button class="copy-user-id-button" data-action="copyUserID">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
                 </div>
                 <!-- Post Creator -->
                 <div class="post-creator" data-creatorid="user-wall">

@@ -1,7 +1,7 @@
 
 import { userProfile } from './userProfile.js';
 
-document.getElementById('profile-header').addEventListener('click', function(event) {
+document.getElementById('profile-actions').addEventListener('click', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
         const action = actionElement.dataset.action;
