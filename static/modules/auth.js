@@ -16,8 +16,7 @@ export function checkSession() {
                 socket.emit('fetch-global-posts', {
                     user_id: userProfile.user_id
                 });
-                miscHelp.sortByDate(posts);
-                // auto sign up success
+                initialSetup();
                 console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
                 miscHelp.showScreen('main');
             } else {
@@ -32,12 +31,12 @@ export function signUp() {
     const username = usernameInput.value.trim();
     const altNameInput = document.getElementById('alt-name-input');
     const altName = altNameInput.value.trim();
-    if (!username || !miscHelp.isAlphanumeric(username)) {
+    if (!username && !miscHelp.isAlphanumeric(username)) {
         document.getElementById('invalid-name-message').textContent = 'Username should be alphanumeric!';
         usernameInput.focus();
         return;
     }
-    if (!altName || !miscHelp.isAlphanumeric(altName)) {
+    if (!altName && !miscHelp.isAlphanumeric(altName)) {
         document.getElementById('invalid-name-message').textContent = 'Alt name should be alphanumeric!';
         altNameInput.focus();
         return;
@@ -56,6 +55,12 @@ function restoreUserData(userData) {
     userProfile.user_data = userData.user_data;
     userProfile.user_id = userData.user_id;
     userProfile.username = userData.username;
+    userProfile.alt_names = userData.alt_names;
+}
+
+function initialSetup() {
+    populateAltDropdowns();
+    miscHelp.sortByDate(posts);
 }
 
 // ---------- socket-listeners ---------- //
@@ -98,6 +103,8 @@ document.getElementById('sign-up-container').addEventListener('keydown', functio
         event.stopPropagation();
         event.preventDefault();
         if (action === 'enterUsername') {
+            signUp();
+        } else if (action === 'enterAltName') {
             signUp();
         }
     }

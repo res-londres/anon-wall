@@ -29,6 +29,7 @@ def get_user_data(session_data):
     user_id = cookie.get_user_cookie()
     if user_id:
         user = db.Users.get_user_by_id(user_id)
+        alt_names = [alt['alt_name'] for alt in db.AltNames.get_alt_names(user_id)]
         if user:
             print(f'[HTTP] cookie found: {user_id}') 
             session_data['active'] = True
@@ -36,6 +37,7 @@ def get_user_data(session_data):
                 'user_data': user,
                 'user_id': user['user_id'],
                 'username': user['username'],
+                'alt_names': alt_names,
             }
     else: print(f'[HTTP] no active session')
     
