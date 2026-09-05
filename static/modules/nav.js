@@ -2,25 +2,23 @@
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
 
-export function setupNavigation() {
-    document.querySelectorAll('nav a').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const pageName = this.dataset.page;
-            const action = this.dataset.action;
-            showPage(pageName);
-            if (action === 'fetchGlobalPosts') {
-                socket.emit('fetch-global-posts', {
-                    user_id: userProfile.user_id
-                });
-            } else if (action === 'fetchUserPosts') {
-                socket.emit('fetch-user-posts', {
-                    user_id: userProfile.user_id
-                });
-            }
-        });
+document.querySelectorAll('nav a').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const pageName = this.dataset.page;
+        const action = this.dataset.action;
+        showPage(pageName);
+        if (action === 'fetchGlobalPosts') {
+            socket.emit('fetch-global-posts', {
+                user_id: userProfile.user_id
+            });
+        } else if (action === 'fetchUserPosts') {
+            socket.emit('fetch-user-posts', {
+                user_id: userProfile.user_id
+            });
+        }
     });
-}
+});
 
 export function showPage(pageName) {
     // hide all pages

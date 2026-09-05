@@ -11,9 +11,6 @@ import * as miscHelp from './modules/helpers/misc.js';
 async function init() {
     // auth
     await auth.checkSession();
-
-    // setup event listeners
-    nav.setupNavigation();
 }
 document.addEventListener('DOMContentLoaded', init);
 
