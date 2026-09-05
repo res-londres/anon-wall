@@ -29,15 +29,25 @@ export function checkSession() {
 export function signUp() {
     const usernameInput = document.getElementById('username-input');
     const username = usernameInput.value.trim();
+    const altNameInput = document.getElementById('alt-name-input');
+    const altName = altNameInput.value.trim();
     if (!username || !miscHelp.isAlphanumeric(username)) {
-        document.getElementById('invalid-username-message').textContent = 'Please enter a valid alphanumeric name!';
+        document.getElementById('invalid-name-message').textContent = 'Username should be alphanumeric!';
         usernameInput.focus();
+        return;
+    }
+    if (!altName || !miscHelp.isAlphanumeric(altName)) {
+        document.getElementById('invalid-name-message').textContent = 'Alt name should be alphanumeric!';
+        altNameInput.focus();
         return;
     }
     const signUpButton = document.getElementById('sign-up-button');
     signUpButton.disabled = true;
     signUpButton.textContent = 'Signing up..';
-    socket.emit('sign-up', {username: username});
+    socket.emit('sign-up', {
+        username: username,
+        alt_name: altName
+    });
 }
 
 // ---------- helper ----------- //
