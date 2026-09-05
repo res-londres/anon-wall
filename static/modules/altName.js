@@ -1,5 +1,6 @@
 
-import { userProfile } from './userProfile';
+import { socket } from './socket.js';
+import { userProfile } from './userProfile.js';
 import * as miscHelp from './helpers/misc.js';
 
 export function getAltNames() {
