@@ -51,11 +51,11 @@ def handle_sign_up(data):
     except ValueError:
         emit('join_error', {'reason': 'bad_name'})
         return
-    db.AltNames.create_alt_name(user_id, alt_name, is_default=True)
     user_data = db.Users.create_user(user_id, username)
     socket_id = request.sid
     db.Users.update_user_socket_id(user_id, socket_id)
     misc.store_in_active_users(active_users, user_id, socket_id, user_data)
+    db.AltNames.create_alt_name(user_id, alt_name, is_default=True)
     print(f'[SIGN-UP] sign up success: {user_data}')
     emit('sign-up-success', {
         'user_data': user_data,
@@ -133,7 +133,9 @@ def handle_fetch_global_posts(data):
     print('[FETCH-POSTS] fetching posts and user liked posts..')
     user_id = data['user_id']
     posts = db.Posts.get_posts()
-    liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
+    liked_posts = {}
+    if posts:
+        liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
     print('[FETCH-POSTS] fetched!')
     emit('fetch-global-posts-success', {
         'posts': posts,
@@ -142,10 +144,12 @@ def handle_fetch_global_posts(data):
 
 @socketio.on('fetch-user-posts')
 def handle_fetch_user_posts(data):
-    user_id = data['user_id']
     print('[FETCH-USER-POSTS] fetching user posts and liked posts..')
+    user_id = data['user_id']
     posts = db.Posts.get_posts_by_user(user_id)
-    liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
+    liked_posts = {}
+    if posts:
+        liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
     print('[FETCH-USER-POSTS] fetched!')
     emit('fetch-user-posts-success', {
         'posts': posts,
