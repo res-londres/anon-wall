@@ -83,3 +83,15 @@ document.querySelectorAll('.alt-name-select').forEach(function(select) {
         }
     });
 });
+
+document.addEventListener('click', function(event) {
+    const actionElement = event.target.closest('[data-action]');
+    if (actionElement) {
+        const action = actionElement.dataset.action;
+        if (action === 'confirmAddAlt') {
+            confirmAddAlt(actionElement);
+        } else if (action === 'cancelAddAlt') {
+            cancelAddAlt(actionElement);
+        }
+    }
+});
