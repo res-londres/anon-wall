@@ -99,6 +99,21 @@ def handle_toggle_comment_like(data):
     comment_id = data['comment_id']
     db.CommentLikes.toggle_comment_like(user_id, comment_id)
 
+# ---------- alt names ----------- #
+@socketio.on('add-alt-name')
+def handle_add_alt_name(data):
+    user_id = data['user_id']
+    alt_name = data['alt_name']
+    alt_names = db.AltNames.get_alt_names(user_id)
+    if len(alt_names) >= 3:
+        emit('add-alt-name-error', {'reason': 'max_alt=3'})
+        return
+    db.AltNames.create_alt_name(user_id, alt_name)
+    emit('add-alt-name-success', {
+        'alt_name': alt_name,
+        'alt_names': [alt['alt_name'] for alt in alt_names] + [alt_name],
+    })
+
 # ---------- post modal ---------- #
 @socketio.on('open-post-modal')
 def handle_open_post_modal(data):

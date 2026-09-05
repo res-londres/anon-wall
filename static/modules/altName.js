@@ -58,6 +58,17 @@ export function cancelAddAlt(button) {
     container.querySelector('.add-alt-input').value = '';
 }
 
+// socketio listener
+socket.on('add-alt-name-success', function(data) {
+    const altName = data.alt_name;
+    userProfile.alt_names.push(altName);
+    populateAltDropdowns();
+    document.querySelectorAll('.add-alt-container').forEach(function(container) {
+        container.style.display = 'none';
+        container.querySelector('.add-alt-input').value = '';
+    });
+});
+
 // event handler
 document.querySelectorAll('.alt-name-select').forEach(function(select) {
     select.addEventListener('change', function() {
