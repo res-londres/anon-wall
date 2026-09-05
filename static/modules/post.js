@@ -7,15 +7,20 @@ import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 // ----------- posts ----------- //
 export function createPost(postCreatorElement) {
     const user_id = userProfile.user_id;
-    const username = userProfile.username;
     const postSubject = postCreatorElement.querySelector('.post-subject-input');
     const postContent = postCreatorElement.querySelector('.post-content-input');
     const subject = postSubject.value.trim();
     const content = postContent.value.trim();
     if (!content) return;
+    const altSelect = postCreatorElement.querySelector('.alt-name-select');
+    const attribution = altSelect.value;
+    if (attribution === '+add') {
+        alert('Please select an alt name or add a new one first.');
+        return;
+    }
     const newPost = {
         user_id: user_id,
-        attribution: username, // TODO: should be alt name!
+        attribution: attribution,
         subject: subject || '[NO SUBJECT]',
         content: content,
     };
