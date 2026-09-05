@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, userPosts, comments, setPosts, setUserPosts, userLikedPosts, setUserLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
+import { posts, usersPosts, comments, setPosts, addUserPosts, userLikedPosts, setUserLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -30,9 +30,9 @@ export function createPost(postCreatorElement) {
 }
 
 // --------- render ------------- //
-export function renderPosts(wallID = 'wall') {
+export function renderPosts(wallID = 'wall', postsList = posts) {
     const wall = document.getElementById(wallID);
-    if (posts.length === 0) {
+    if (postsList.length === 0) {
         wall.innerHTML = `
             <div class="empty-wall">
                 <div class="empty-icon"><i class="fa-solid fa-leaf"></i></div>
@@ -43,7 +43,7 @@ export function renderPosts(wallID = 'wall') {
     }
     wall.innerHTML = '';
     let html = '';
-    posts.forEach(function(post) {
+    postsList.forEach(function(post) {
         html += createPostHTML(post['post_id']);
     });
     wall.innerHTML = html;
@@ -313,11 +313,12 @@ socket.on('fetch-global-posts-success', function(data) {
 });
 
 socket.on('fetch-user-posts-success', function(data) {
-    const newPosts = data.posts;
+    const userID = data.user_id;
+    const newPosts = data.user_posts;
     const likedPosts = data.liked_posts;
     setUserLikedPosts(likedPosts);
-    setUserPosts(newPosts);
-    renderPosts('user-wall');
+    addUserPosts(userID, newPosts);
+    renderPosts('user-wall', usersPosts[userID]);
 });
 
 // ----------- event-handlers ----------- //

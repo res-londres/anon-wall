@@ -146,13 +146,14 @@ def handle_fetch_global_posts(data):
 def handle_fetch_user_posts(data):
     print('[FETCH-USER-POSTS] fetching user posts and liked posts..')
     user_id = data['user_id']
-    posts = db.Posts.get_posts_by_user(user_id)
+    user_posts = db.Posts.get_posts_by_user(user_id)
     liked_posts = {}
-    if posts:
-        liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
+    if user_posts:
+        liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in user_posts])
     print('[FETCH-USER-POSTS] fetched!')
     emit('fetch-user-posts-success', {
-        'posts': posts,
+        'user_id': user_id,
+        'user_posts': user_posts,
         'liked_posts': liked_posts,
     })
 

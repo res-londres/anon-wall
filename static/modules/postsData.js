@@ -1,6 +1,6 @@
 
 export let posts = [];               // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
-export let userPosts = [];           // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
+export let usersPosts = [];           // {user_id: [{post_id: ..., user_id: .., attribution: .., etc}, ..], another_user: [..]}
 export let currentPostID = null;
 export let comments = [];            // {post_id: [{comment_id: .., post_id: .., etc}, {another_comment}], another_post, ..}
 export let userLikedPosts = {};      // {post_id: true, post_id: true, ..}
@@ -11,7 +11,7 @@ export function setPosts(newPosts) {
     posts = newPosts;
 }
 export function setUserPosts(newUserPosts) {
-    userPosts = newUserPosts;
+    usersPosts = newUserPosts;
 }
 export function setCurrentPostID(postID) {
     currentPostID = postID;
@@ -24,6 +24,10 @@ export function setUserLikedPosts(likes) {
 }
 export function setUserLikedComments(likes, postID) {
     userLikedComments[postID] = likes;
+}
+
+export function addUserPosts(userID, newUserPosts) {
+    usersPosts[userID] = newUserPosts;
 }
 
 // ---------- getters ----------- //
