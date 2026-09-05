@@ -13,6 +13,27 @@ export function addAltName(altName) {
     userProfile.alt_names.push(altName);
 }
 
+export function populateAltDropdowns() {
+    const altNames = userProfile.alt_names || [];
+    const maxAlts = 3;
+    const hasSpace = altNames.length < maxAlts;
+    document.querySelectorAll('.alt-name-select').forEach(function(select) {
+        select.innerHTML = '';
+        altNames.forEach(function(name) {
+            const option = document.createElement('option');
+            option.value = name;
+            option.textContent = name;
+            select.appendChild(option);
+        });
+        if (hasSpace) {
+            const option = document.createElement('option');
+            option.value = '+add';
+            option.textContent = '+ Add New Alt';
+            select.appendChild(option);
+        }
+    });
+}
+
 export function confirmAddAlt(button) {
     const container = button.closest('.add-alt-container');
     const input = container.querySelector('.add-alt-input');

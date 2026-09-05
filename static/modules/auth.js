@@ -2,6 +2,7 @@
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
 import { posts } from './postsData.js';
+import { populateAltDropdowns } from './altName.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- auth ----------- //
@@ -64,10 +65,11 @@ socket.on('sign-up-success', function(data) {
     }
     miscHelp.showScreen('main');
     miscHelp.resetSignUpState();
-    userProfile['user_data'] = data.user_data;
-    userProfile['user_id'] = data.user_id;
-    userProfile['username'] = data.username;
-    userProfile['alt_names'] = data.alt_names;
+    userProfile.user_data = data.user_data;
+    userProfile.user_id = data.user_id;
+    userProfile.username = data.username;
+    userProfile.alt_names = data.alt_names;
+    populateAltDropdowns();
     console.log(userProfile);
 });
 
