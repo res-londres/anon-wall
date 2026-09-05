@@ -44,12 +44,14 @@ def get_user_data(session_data):
 def handle_sign_up(data):
     print(f'[SIGN-UP] new user signing up..')
     username = data['username']
+    alt_name = data['alt_name'] # first alt name upon signup
     existing_ids = {user.get('user_id') for user in active_users.values()}
     try:
         user_id = id.generate_user_id(username, existing_ids)
     except ValueError:
         emit('join_error', {'reason': 'bad_name'})
         return
+    db.AltNames.create_alt_name(user_id, alt_name, is_default=True)
     user_data = db.Users.create_user(user_id, username)
     socket_id = request.sid
     db.Users.update_user_socket_id(user_id, socket_id)
@@ -59,6 +61,7 @@ def handle_sign_up(data):
         'user_data': user_data,
         'user_id': user_id, 
         'username': username,
+        'alt_names': [alt_name],
         'set_cookie': True
     })
 

@@ -67,6 +67,7 @@ socket.on('sign-up-success', function(data) {
     userProfile['user_data'] = data.user_data;
     userProfile['user_id'] = data.user_id;
     userProfile['username'] = data.username;
+    userProfile['alt_names'] = data.alt_names;
     console.log(userProfile);
 });
 
