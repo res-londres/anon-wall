@@ -25,8 +25,8 @@ export function createPost(postCreatorElement) {
 }
 
 // --------- render ------------- //
-export function renderPosts() {
-    const wall = document.getElementById('wall');
+export function renderPosts(wallID = 'wall') {
+    const wall = document.getElementById(wallID);
     if (posts.length === 0) {
         wall.innerHTML = `
             <div class="empty-wall">
@@ -42,25 +42,6 @@ export function renderPosts() {
         html += createPostHTML(post['post_id']);
     });
     wall.innerHTML = html;
-}
-
-export function renderUserPosts() {
-    const userWall = document.getElementById('user-wall');
-    if (userPosts.length === 0) {
-        userWall.innerHTML = `
-            <div class="empty-wall">
-                <div class="empty-icon"><i class="fa-solid fa-leaf"></i></div>
-                <p>No posts yet..</p>
-            </div>
-        `;
-        return;
-    }
-    userWall.innerHTML = '';
-    let html = '';
-    userPosts.forEach(function(post) {
-        html += createPostHTML(post['post_id']);
-    });
-    userWall.innerHTML = html;
 }
 
 export function renderPostModal(postID) {
@@ -331,7 +312,7 @@ socket.on('fetch-user-posts-success', function(data) {
     const likedPosts = data.liked_posts;
     setUserLikedPosts(likedPosts);
     setUserPosts(newPosts);
-    renderUserPosts();
+    renderPosts('user-wall');
 });
 
 // ----------- event-handlers ----------- //
