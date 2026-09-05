@@ -120,7 +120,9 @@ def handle_open_post_modal(data):
     user_id = data['user_id']
     post_id = data['post_id']
     comments = db.Comments.get_comments(post_id)
-    liked_comments = db.CommentLikes.get_user_liked_comments_in_post(user_id, post_id, [comment['comment_id'] for comment in comments])
+    liked_comments = {}
+    if comments:
+        liked_comments = db.CommentLikes.get_user_liked_comments_in_post(user_id, post_id, [comment['comment_id'] for comment in comments])
     emit('open-post-modal-success', {
         'post_id': post_id,
         'comments': comments,
