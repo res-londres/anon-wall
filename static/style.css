@@ -787,6 +787,72 @@
     transform: scale(0.9);
 }
 
+/* ---------- ADD ALT INPUT ---------- */
+.add-alt-container {
+    align-items: center;
+    display: none;
+    gap: 0.3rem;
+}
+
+.add-alt-input {
+    background: #fafffd;
+    border: 2px solid #1e392a;
+    border-radius: 0.5rem;
+    font-family: inherit;
+    font-size: 0.85rem;
+    padding: 0.2rem 0.5rem;
+    width: 120px;
+}
+
+.add-alt-input:focus {
+    border-color: #3cc47c;
+    outline: none;
+}
+
+.add-alt-confirm {
+    background: #3cc47c;
+    border: 1px solid #1e392a;
+    border-radius: 0.5rem;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.15rem 0.8rem;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.add-alt-confirm:hover {
+    background: #2ca86a;
+}
+
+.add-alt-cancel {
+    background: #e8f5ed;
+    border: 1px solid #828081;
+    border-radius: 0.5rem;
+    color: #1e392a;
+    cursor: pointer;
+    padding: 0.15rem 0.8rem;
+    font-size: 0.8rem;
+    transition: background 0.2s;
+}
+
+.add-alt-cancel:hover {
+    background: #d0e8db;
+}
+
+/* Sign-up alt name field */
+#altname-input {
+    border: 2px solid #1e392a;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    width: 100%;
+    margin-top: 0.25rem;
+}
+
+#altname-input:focus {
+    outline: none;
+}
+
 
 /*
 dark: #1e392a

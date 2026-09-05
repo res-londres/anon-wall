@@ -56,8 +56,13 @@
                         <p class="post-creator-label">Create post</p>
                         <div class="post-creator-controls">
                             <select class="alt-name-select">
-                                <option value="{new-alt}">+ Create New Alt</option>
+                                <!-- options will come from js -->
                             </select>
+                            <div class="add-alt-container" style="display:none;">
+                                <input type="text" class="add-alt-input" placeholder="Enter new alt name..." maxlength="20">
+                                <button class="add-alt-confirm" data-action="confirmAddAlt">Add</button>
+                                <button class="add-alt-cancel" data-action="cancelAddAlt">Cancel</button>
+                            </div>
                             <button class="post-button" data-action="createPost" data-creatorid="main-wall">Post</button>
                         </div>
                     </div>
@@ -99,8 +104,13 @@
                         <p class="post-creator-label">Create post</p>
                         <div class="post-creator-controls">
                             <select class="alt-name-select">
-                                <option value="{new-alt}">+ Create New Alt</option>
+                                <!-- options will come from js -->
                             </select>
+                            <div class="add-alt-container" style="display:none;">
+                                <input type="text" class="add-alt-input" placeholder="Enter new alt name..." maxlength="20">
+                                <button class="add-alt-confirm" data-action="confirmAddAlt">Add</button>
+                                <button class="add-alt-cancel" data-action="cancelAddAlt">Cancel</button>
+                            </div>
                             <button class="post-button" data-action="createPost" data-creatorid="user-wall">Post</button>
                         </div>
                     </div>
