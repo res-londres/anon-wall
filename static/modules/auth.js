@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, comments, setPosts, setComments, setUserLikedPosts} from './postsData.js';
+import { posts } from './postsData.js';
 import * as miscHelp from './helpers/misc.js';
 
 // --------- auth ----------- //

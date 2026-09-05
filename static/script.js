@@ -14,8 +14,6 @@ async function init() {
 
     // setup event listeners
     nav.setupNavigation();
-
-    post.renderPosts();
 }
 document.addEventListener('DOMContentLoaded', init);
 
