@@ -106,7 +106,10 @@
     transform: scale(1.05);
 }
 .card-right h2 {
-    padding: 0 0 2rem;
+    padding-bottom: 1.25rem;
+}
+.card-right .input-container {
+    margin-top: 0.75rem;
 }
 .card-right input {
     border: 2px solid #1e392a;

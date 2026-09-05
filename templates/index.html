@@ -15,7 +15,7 @@
         </div>
     </div>
     <!-- Sign Up Screen -->
-    <div id="sign-up-container" style="display:none;">
+    <div id="sign-up-container">
         <div class="sign-up-card">
             <div class="card-left">
                 <h1>AnonWall</h1>
@@ -23,8 +23,14 @@
             </div>
             <div class="card-right">
                 <h2>Sign up to AnonWall</h2>
-                <p>Enter your private username</p>
-                <input type="text" id="username-input" data-action="enterUsername" placeholder="Username" maxLength="20">
+                <div class="input-container">
+                    <p>Enter your private username</p>
+                    <input type="text" id="username-input" data-action="enterUsername" placeholder="Username" maxLength="20">
+                </div>
+                <div class="input-container">
+                    <p>Enter your first public alt name</p>
+                    <input type="text" id="altname-input" data-action="enterAltName" placeholder="Alt Name" maxlength="20">
+                </div>
                 <p id="invalid-username-message"></p>
                 <button id="sign-up-button" data-action="signUp">Sign up</button>
             </div>
