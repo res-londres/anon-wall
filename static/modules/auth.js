@@ -12,8 +12,9 @@ export function checkSession() {
             if (data.active) {
                 const userData = data.user;
                 restoreUserData(userData);
-                setUserLikedPosts(userData.post_likes);
-                setPosts(data.posts);
+                socket.emit('fetch-global-posts', {
+                    user_id: userProfile.user_id
+                });
                 miscHelp.sortByDate(posts);
                 // auto sign up success
                 console.log(`[CHECK-SESSION] active session found: ${userProfile.user_id}; loggin in..`);
@@ -29,7 +30,7 @@ export function signUp() {
     const usernameInput = document.getElementById('username-input');
     const username = usernameInput.value.trim();
     if (!username || !miscHelp.isAlphanumeric(username)) {
-        const invalidUsernameMessage = document.getElementById('invalid-username-message').textContent = 'Please enter a valid alphanumeric name!';
+        document.getElementById('invalid-username-message').textContent = 'Please enter a valid alphanumeric name!';
         usernameInput.focus();
         return;
     }

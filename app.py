@@ -23,8 +23,6 @@ def check_session():
     print(f'[HTTP] checking cookie..')
     session_data = {'active': False}
     get_user_data(session_data)
-    post_ids = get_posts_data(session_data)
-    get_user_liked_posts(session_data, post_ids)
     return jsonify(session_data)
 
 def get_user_data(session_data):
@@ -40,20 +38,7 @@ def get_user_data(session_data):
                 'username': user['username'],
             }
     else: print(f'[HTTP] no active session')
-
-def get_posts_data(session_data):
-    posts = db.Posts.get_posts()
-    print(f'[HTTP] recent posts: {posts}')
-    session_data['posts'] = posts
-    return [post['post_id'] for post in posts]
-
-def get_user_liked_posts(session_data, post_ids):
-    user_id = cookie.get_user_cookie()
-    if user_id:
-        post_likes = db.PostLikes.get_user_liked_posts(user_id, post_ids)
-        session_data['user']['post_likes'] = post_likes
-        print(f'[HTTP] user likes: {post_likes}')
-
+    
 # ---------- sign-up ----------- #
 @socketio.on('sign-up')
 def handle_sign_up(data):
@@ -126,22 +111,27 @@ def handle_open_post_modal(data):
 
 # ---------- fetch posts ---------- #
 @socketio.on('fetch-global-posts')
-def handle_fetch_global_posts():
-    print('[FETCH-POSTS] fetching..')
+def handle_fetch_global_posts(data):
+    print('[FETCH-POSTS] fetching posts and user liked posts..')
+    user_id = data['user_id']
     posts = db.Posts.get_posts()
+    liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
     print('[FETCH-POSTS] fetched!')
     emit('fetch-global-posts-success', {
         'posts': posts,
-    }) 
+        'liked_posts': liked_posts,
+    })
 
 @socketio.on('fetch-user-posts')
 def handle_fetch_user_posts(data):
     user_id = data['user_id']
-    print('[FETCH-USER-POSTS] fetching..')
+    print('[FETCH-USER-POSTS] fetching user posts and liked posts..')
     posts = db.Posts.get_posts_by_user(user_id)
+    liked_posts = db.PostLikes.get_user_liked_posts(user_id, [post['post_id'] for post in posts])
     print('[FETCH-USER-POSTS] fetched!')
     emit('fetch-user-posts-success', {
         'posts': posts,
+        'liked_posts': liked_posts,
     })
 
 # ---------- etc ---------- #

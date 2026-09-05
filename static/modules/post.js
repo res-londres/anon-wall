@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, userPosts, comments, setPosts, setUserPosts, userLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
+import { posts, userPosts, comments, setPosts, setUserPosts, userLikedPosts, setUserLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -320,12 +320,16 @@ socket.on('open-post-modal-success', function(data) {
 // fetching posts
 socket.on('fetch-global-posts-success', function(data) {
     const newPosts = data.posts;
+    const likedPosts = data.liked_posts;
+    setUserLikedPosts(likedPosts);
     setPosts(newPosts);
     renderPosts();
 });
 
 socket.on('fetch-user-posts-success', function(data) {
     const newPosts = data.posts;
+    const likedPosts = data.liked_posts;
+    setUserLikedPosts(likedPosts);
     setUserPosts(newPosts);
     renderUserPosts();
 });
