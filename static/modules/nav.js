@@ -1,5 +1,6 @@
 
 import { socket } from './socket.js';
+import { setCurrentWallID } from './postsData.js';
 import { userProfile } from './userProfile.js';
 
 document.querySelectorAll('nav a').forEach(function(link) {
@@ -9,10 +10,12 @@ document.querySelectorAll('nav a').forEach(function(link) {
         const action = this.dataset.action;
         showPage(pageName);
         if (action === 'fetchGlobalPosts') {
+            setCurrentWallID('main-wall');
             socket.emit('fetch-global-posts', {
                 user_id: userProfile.user_id
             });
         } else if (action === 'fetchUserPosts') {
+            setCurrentWallID('user-wall');
             socket.emit('fetch-user-posts', {
                 user_id: userProfile.user_id
             });

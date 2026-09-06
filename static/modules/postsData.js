@@ -1,7 +1,9 @@
 
 export let posts = [];               // [{post_id: ..., user_id: .., attribution: .., etc}, ..]
-export let usersPosts = [];           // {user_id: [{post_id: ..., user_id: .., attribution: .., etc}, ..], another_user: [..]}
-export let currentPostID = null;
+export let usersPosts = [];          // {user_id: [{post_id: ..., user_id: .., attribution: .., etc}, ..], another_user: [..]}
+export let currentPostID = null;            // which post u currently have opened
+export let currentWallID = 'main-wall';     // which wall u currently in
+export let currentUserID = null;            // which user's wall u currently viewing (null if in main wall)
 export let comments = [];            // {post_id: [{comment_id: .., post_id: .., etc}, {another_comment}], another_post, ..}
 export let userLikedPosts = {};      // {post_id: true, post_id: true, ..}
 export let userLikedComments = {};   // {post_id: {comment_id: true, comment_id: true, ..}, post_id: {comment_id: true, ..}, ..}
@@ -15,6 +17,12 @@ export function setUserPosts(newUserPosts) {
 }
 export function setCurrentPostID(postID) {
     currentPostID = postID;
+}
+export function setCurrentWallID(wallID) {
+    currentWallID = wallID;
+}
+export function setCurrentUserID(userID) {
+    currentUserID = userID;
 }
 export function setComments(newComments) {
     comments = newComments;
@@ -31,6 +39,7 @@ export function addUserPosts(userID, newUserPosts) {
 }
 
 // ---------- getters ----------- //
+
 export function getPostByID(postID) {
     for (let postIndex = 0; postIndex < posts.length; postIndex++) {
         const post = posts[postIndex];

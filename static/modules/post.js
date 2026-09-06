@@ -1,7 +1,7 @@
 
 import { socket } from './socket.js';
 import { userProfile } from './userProfile.js';
-import { posts, usersPosts, comments, setPosts, addUserPosts, userLikedPosts, setUserLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, getPostByID, getCommentByID } from './postsData.js';
+import { posts, usersPosts, comments, setPosts, addUserPosts, userLikedPosts, setUserLikedPosts, userLikedComments, setUserLikedComments, setCurrentPostID, setCurrentWallID, setCurrentUserID, getPostByID, getCommentByID, currentPostID, currentWallID, currentUserID } from './postsData.js';  // TODO: just do import * later
 import { escapeHTML, formatTime, sortByLikes } from './helpers/misc.js';
 
 // ----------- posts ----------- //
@@ -30,8 +30,9 @@ export function createPost(postCreatorElement) {
 }
 
 // --------- render ------------- //
-export function renderPosts(wallID = 'wall', postsList = posts) {
+export function renderPosts(wallID, userID = null) {
     const wall = document.getElementById(wallID);
+    const postsList = userID ? usersPosts[userID] : posts;
     if (postsList.length === 0) {
         wall.innerHTML = `
             <div class="empty-wall">
@@ -77,12 +78,12 @@ export function closePostModal() {
 }
 
 // ---------- modal-actions ---------- //
-export function submitCommentModal(postID) {
+export function submitCommentModal() {
     const commentInput = document.getElementById('modal-comment-input');
     const comment = commentInput.value.trim();
     if (!comment) return;
     
-    const post = getPostByID(postID);
+    const post = getPostByID(currentPostID);
     const newComment = {
         post_id: post.post_id,
         user_id: post.user_id,
@@ -107,7 +108,7 @@ export function toggleLike(postID) {
         delete userLikedPosts[postID];
         post.likes -= 1;
     }
-    renderPosts();
+    renderPosts(currentWallID);
     socket.emit('toggle-post-like', {
         user_id: userProfile.user_id,
         post_id: postID
@@ -130,7 +131,7 @@ export function toggleCommentLike(postID, commentID) {
         comment.likes -= 1;
     }
     renderPostModal(postID);
-    renderPosts();
+    renderPosts(currentWallID);
     socket.emit('toggle-comment-like', {
         user_id: userProfile.user_id,
         comment_id: commentID
@@ -269,7 +270,7 @@ export function createLoadingCommentsHTML() {
 socket.on('create-post-success', function(data) {
     const post = data.post_data;
     posts.unshift(post);
-    renderPosts();
+    renderPosts(currentWallID);
     document.querySelector('.content').scrollTop = 0;
 });
 
@@ -284,7 +285,6 @@ socket.on('submit-comment-success', function(data) {
     post.comment_count += 1;
     
     renderPostModal(postID);
-    renderPosts();
     
     const modalContentScroll = document.querySelector('.post-modal-content');
     const modalCommentsSection = document.querySelector('.modal-comments-section');
@@ -309,7 +309,7 @@ socket.on('fetch-global-posts-success', function(data) {
     const likedPosts = data.liked_posts;
     setUserLikedPosts(likedPosts);
     setPosts(newPosts);
-    renderPosts();
+    renderPosts(currentWallID);
 });
 
 socket.on('fetch-user-posts-success', function(data) {
@@ -318,7 +318,7 @@ socket.on('fetch-user-posts-success', function(data) {
     const likedPosts = data.liked_posts;
     setUserLikedPosts(likedPosts);
     addUserPosts(userID, newPosts);
-    renderPosts('user-wall', usersPosts[userID]);
+    renderPosts(currentWallID, userID);
 });
 
 // ----------- event-handlers ----------- //
@@ -346,7 +346,7 @@ document.addEventListener('click', function(event) {
         } else if (action === 'likeComment') {
             toggleCommentLike(postID, commentID);
         } else if (action === 'submitComment') {
-            submitCommentModal(postID);
+            submitCommentModal();
         } 
     }
 });
@@ -360,7 +360,6 @@ document.addEventListener('keydown', function(event) {
     const actionElement = event.target.closest('[data-action]');
     if (actionElement) {
         const action = actionElement.dataset.action;
-        const postID = actionElement.hasAttribute('data-postid') ? parseInt(actionElement.dataset.postid) : null;
         const creatorID = actionElement.hasAttribute('data-creatorid') ? actionElement.dataset.creatorid : null;
         const postCreatorElement = creatorID ? document.querySelector(`.post-creator[data-creatorid="${creatorID}"]`) : null;
 
@@ -378,7 +377,7 @@ document.addEventListener('keydown', function(event) {
         } else if (action === 'enterContent') {
             createPost(postCreatorElement);
         } else if (action === 'enterComment') {
-            submitCommentModal(postID);
+            submitCommentModal();
         }
     }
 });
